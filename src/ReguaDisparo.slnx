@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="ReguaDisparo.App/ReguaDisparo.App.csproj" />
+  <Project Path="ReguaDisparo.Common/ReguaDisparo.Common.csproj" />
+  <Project Path="ReguaDisparo.Core/ReguaDisparo.Core.csproj" />
+  <Project Path="ReguaDisparo.Domain/ReguaDisparo.Domain.csproj" />
+  <Project Path="ReguaDisparo.Infrastructure/ReguaDisparo.Infrastructure.csproj" />
+  <Project Path="ReguaDisparo.IoC/ReguaDisparo.IoC.csproj" />
+  <Project Path="ReguaDisparo.Scheduler/ReguaDisparo.Scheduler.csproj" />
+</Solution>

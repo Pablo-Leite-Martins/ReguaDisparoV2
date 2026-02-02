@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\ClienteMais\Procedures\" />
+    <Folder Include="Entities\ControleAcesso\Procedures\" />
+    <Folder Include="Entities\Corporativo\Procedures\" />
+  </ItemGroup>
+
+</Project>
