@@ -23,19 +23,19 @@ public class OrganizacaoRepository : IOrganizacaoRepository
     {
         try
         {
-            _logger.LogDebug("Listando todas as organizações");
+            _logger.LogDebug("Listando todas as organizaï¿½ï¿½es");
 
             var lista = await _context.TB_CMCORP_ORGANIZACAOs
                 .AsNoTracking()
                 .ToListAsync();
 
-            _logger.LogInformation("Listadas {Count} organizações", lista.Count);
+            _logger.LogInformation("Listadas {Count} organizaï¿½ï¿½es", lista.Count);
 
             return lista;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao listar organizações");
+            _logger.LogError(ex, "Erro ao listar organizaï¿½ï¿½es");
             throw;
         }
     }
@@ -44,21 +44,25 @@ public class OrganizacaoRepository : IOrganizacaoRepository
     {
         try
         {
-            _logger.LogDebug("Listando organizações ativas");
+            _logger.LogDebug("Listando organizaÃ§Ãµes ativas");
 
-            // Usando a procedure do contexto
+            // Alternativa: usar query LINQ em vez da stored procedure para evitar erro de colunas faltantes
             var lista = await _context.TB_CMCORP_ORGANIZACAOs
-                .FromSqlRaw("EXEC CMCORP_sp_ListaOrganizacoesAtivas")
+                .Where(o => o.FL_ATIVO == true)
                 .AsNoTracking()
+                .OrderBy(x => x.DS_NOME_FANTASIA)
                 .ToListAsync();
 
-            _logger.LogInformation("Listadas {Count} organizações ativas", lista.Count);
+            // Se precisar usar a stored procedure, ela deve retornar TODAS as colunas da entidade
+            // incluindo DS_COR_SECUNDARIA_PORTALV2, mesmo que seja NULL
+
+            _logger.LogInformation("Listadas {Count} organizaÃ§Ãµes ativas", lista.Count);
 
             return lista;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao listar organizações ativas");
+            _logger.LogError(ex, "Erro ao listar organizaÃ§Ãµes ativas");
             throw;
         }
     }
@@ -67,20 +71,20 @@ public class OrganizacaoRepository : IOrganizacaoRepository
     {
         try
         {
-            _logger.LogDebug("Listando organizações com integração CRM-ERP");
+            _logger.LogDebug("Listando organizaï¿½ï¿½es com integraï¿½ï¿½o CRM-ERP");
 
             var lista = await _context.TB_CMCORP_ORGANIZACAOs
                 .Where(o => o.FL_CRM_INTEGRADO_ERP == true)
                 .AsNoTracking()
                 .ToListAsync();
 
-            _logger.LogInformation("Listadas {Count} organizações com integração CRM-ERP", lista.Count);
+            _logger.LogInformation("Listadas {Count} organizaï¿½ï¿½es com integraï¿½ï¿½o CRM-ERP", lista.Count);
 
             return lista;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao listar organizações com integração CRM-ERP");
+            _logger.LogError(ex, "Erro ao listar organizaï¿½ï¿½es com integraï¿½ï¿½o CRM-ERP");
             throw;
         }
     }
@@ -89,7 +93,7 @@ public class OrganizacaoRepository : IOrganizacaoRepository
     {
         try
         {
-            _logger.LogDebug("Buscando organização {IdOrganizacao}", idOrganizacao);
+            _logger.LogDebug("Buscando organizaï¿½ï¿½o {IdOrganizacao}", idOrganizacao);
 
             var organizacao = await _context.TB_CMCORP_ORGANIZACAOs
                 .AsNoTracking()
@@ -97,14 +101,14 @@ public class OrganizacaoRepository : IOrganizacaoRepository
 
             if (organizacao == null)
             {
-                _logger.LogWarning("Organização {IdOrganizacao} não encontrada", idOrganizacao);
+                _logger.LogWarning("Organizaï¿½ï¿½o {IdOrganizacao} nï¿½o encontrada", idOrganizacao);
             }
 
             return organizacao;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao buscar organização {IdOrganizacao}", idOrganizacao);
+            _logger.LogError(ex, "Erro ao buscar organizaï¿½ï¿½o {IdOrganizacao}", idOrganizacao);
             throw;
         }
     }
@@ -113,20 +117,20 @@ public class OrganizacaoRepository : IOrganizacaoRepository
     {
         try
         {
-            _logger.LogDebug("Listando organizações UAU Cloud");
+            _logger.LogDebug("Listando organizaï¿½ï¿½es UAU Cloud");
 
             var lista = await _context.TB_CMCORP_ORGANIZACAOs
                 .Where(o => o.FL_UAU_CLOUD == true)
                 .AsNoTracking()
                 .ToListAsync();
 
-            _logger.LogInformation("Listadas {Count} organizações UAU Cloud", lista.Count);
+            _logger.LogInformation("Listadas {Count} organizaï¿½ï¿½es UAU Cloud", lista.Count);
 
             return lista;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao listar organizações UAU Cloud");
+            _logger.LogError(ex, "Erro ao listar organizaï¿½ï¿½es UAU Cloud");
             throw;
         }
     }
@@ -135,16 +139,16 @@ public class OrganizacaoRepository : IOrganizacaoRepository
     {
         try
         {
-            _logger.LogDebug("Inserindo organização {IdOrganizacao}", entidade.ID_ORGANIZACAO);
+            _logger.LogDebug("Inserindo organizaï¿½ï¿½o {IdOrganizacao}", entidade.ID_ORGANIZACAO);
 
             _context.TB_CMCORP_ORGANIZACAOs.Add(entidade);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Organização {IdOrganizacao} inserida com sucesso", entidade.ID_ORGANIZACAO);
+            _logger.LogInformation("Organizaï¿½ï¿½o {IdOrganizacao} inserida com sucesso", entidade.ID_ORGANIZACAO);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao inserir organização {IdOrganizacao}", entidade.ID_ORGANIZACAO);
+            _logger.LogError(ex, "Erro ao inserir organizaï¿½ï¿½o {IdOrganizacao}", entidade.ID_ORGANIZACAO);
             throw;
         }
     }
@@ -153,16 +157,16 @@ public class OrganizacaoRepository : IOrganizacaoRepository
     {
         try
         {
-            _logger.LogDebug("Atualizando organização {IdOrganizacao}", entidade.ID_ORGANIZACAO);
+            _logger.LogDebug("Atualizando organizaï¿½ï¿½o {IdOrganizacao}", entidade.ID_ORGANIZACAO);
 
             _context.TB_CMCORP_ORGANIZACAOs.Update(entidade);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Organização {IdOrganizacao} atualizada com sucesso", entidade.ID_ORGANIZACAO);
+            _logger.LogInformation("Organizaï¿½ï¿½o {IdOrganizacao} atualizada com sucesso", entidade.ID_ORGANIZACAO);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao atualizar organização {IdOrganizacao}", entidade.ID_ORGANIZACAO);
+            _logger.LogError(ex, "Erro ao atualizar organizaï¿½ï¿½o {IdOrganizacao}", entidade.ID_ORGANIZACAO);
             throw;
         }
     }
@@ -171,7 +175,7 @@ public class OrganizacaoRepository : IOrganizacaoRepository
     {
         try
         {
-            _logger.LogDebug("Atualizando layout da organização {IdOrganizacao}", entidade.ID_ORGANIZACAO);
+            _logger.LogDebug("Atualizando layout da organizaï¿½ï¿½o {IdOrganizacao}", entidade.ID_ORGANIZACAO);
 
             var organizacao = await _context.TB_CMCORP_ORGANIZACAOs
                 .FirstOrDefaultAsync(o => o.ID_ORGANIZACAO == entidade.ID_ORGANIZACAO);
@@ -186,16 +190,16 @@ public class OrganizacaoRepository : IOrganizacaoRepository
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Layout da organização {IdOrganizacao} atualizado com sucesso", entidade.ID_ORGANIZACAO);
+                _logger.LogInformation("Layout da organizaï¿½ï¿½o {IdOrganizacao} atualizado com sucesso", entidade.ID_ORGANIZACAO);
             }
             else
             {
-                _logger.LogWarning("Organização {IdOrganizacao} não encontrada para atualizar layout", entidade.ID_ORGANIZACAO);
+                _logger.LogWarning("Organizaï¿½ï¿½o {IdOrganizacao} nï¿½o encontrada para atualizar layout", entidade.ID_ORGANIZACAO);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao atualizar layout da organização {IdOrganizacao}", entidade.ID_ORGANIZACAO);
+            _logger.LogError(ex, "Erro ao atualizar layout da organizaï¿½ï¿½o {IdOrganizacao}", entidade.ID_ORGANIZACAO);
             throw;
         }
     }
@@ -204,7 +208,7 @@ public class OrganizacaoRepository : IOrganizacaoRepository
     {
         try
         {
-            _logger.LogDebug("Excluindo organização {IdOrganizacao}", idOrganizacao);
+            _logger.LogDebug("Excluindo organizaï¿½ï¿½o {IdOrganizacao}", idOrganizacao);
 
             var organizacao = await _context.TB_CMCORP_ORGANIZACAOs
                 .FirstOrDefaultAsync(o => o.ID_ORGANIZACAO == idOrganizacao);
@@ -214,16 +218,16 @@ public class OrganizacaoRepository : IOrganizacaoRepository
                 _context.TB_CMCORP_ORGANIZACAOs.Remove(organizacao);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Organização {IdOrganizacao} excluída com sucesso", idOrganizacao);
+                _logger.LogInformation("Organizaï¿½ï¿½o {IdOrganizacao} excluï¿½da com sucesso", idOrganizacao);
             }
             else
             {
-                _logger.LogWarning("Organização {IdOrganizacao} não encontrada para exclusão", idOrganizacao);
+                _logger.LogWarning("Organizaï¿½ï¿½o {IdOrganizacao} nï¿½o encontrada para exclusï¿½o", idOrganizacao);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao excluir organização {IdOrganizacao}", idOrganizacao);
+            _logger.LogError(ex, "Erro ao excluir organizaï¿½ï¿½o {IdOrganizacao}", idOrganizacao);
             throw;
         }
     }

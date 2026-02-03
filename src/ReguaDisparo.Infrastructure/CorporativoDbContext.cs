@@ -542,7 +542,9 @@ public partial class CorporativoDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.DS_COR_SECUNDARIA_PORTALV2)
                 .HasMaxLength(20)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .IsRequired(false)
+                .HasDefaultValueSql("NULL");
             entity.Property(e => e.DS_COR_TEXTO_PRIMARIA_PORTALV2)
                 .HasMaxLength(20)
                 .IsUnicode(false);

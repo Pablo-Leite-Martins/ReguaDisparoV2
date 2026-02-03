@@ -1,16 +1,22 @@
 using Hangfire;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ReguaDisparo.Core.Interfaces;
+using ReguaDisparo.Core.Services;
 
 namespace ReguaDisparo.Scheduler;
 
 public class NotificationScheduler
 {
     private readonly ILogger<NotificationScheduler> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
-    public NotificationScheduler(ILogger<NotificationScheduler> logger)
+    public NotificationScheduler(
+        ILogger<NotificationScheduler> logger,
+        IServiceProvider serviceProvider)
     {
         _logger = logger;
+        _serviceProvider = serviceProvider;
     }
 
     public void ConfigureJobs()
@@ -29,10 +35,21 @@ public class NotificationScheduler
         _logger.LogInformation("Jobs configurados com sucesso");
     }
 
-    public void ExecuteNow()
+    public async Task ExecuteNowAsync(bool useHangfire = false)
     {
         _logger.LogInformation("Executando job imediatamente");
-        BackgroundJob.Enqueue<INotificationOrchestrator>(
-            orchestrator => orchestrator.ProcessAllCompaniesAsync());
+        
+        if (useHangfire)
+        {
+            BackgroundJob.Enqueue<INotificationOrchestrator>(
+                orchestrator => orchestrator.ProcessAllCompaniesAsync());
+        }
+        else
+        {
+            // Executa diretamente para permitir debug
+            using var scope = _serviceProvider.CreateScope();
+            var orchestrator = scope.ServiceProvider.GetRequiredService<INotificationOrchestrator>();
+            await orchestrator.ProcessAllCompaniesAsync();
+        }
     }
 }

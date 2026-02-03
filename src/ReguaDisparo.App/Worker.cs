@@ -19,7 +19,7 @@ public class Worker : BackgroundService
     {
         _logger.LogInformation("Worker iniciado em: {time}", DateTimeOffset.Now);
         
-        _scheduler.ConfigureJobs();
+        await _scheduler.ExecuteNowAsync();
         
         _logger.LogInformation("Jobs configurados com sucesso");
         

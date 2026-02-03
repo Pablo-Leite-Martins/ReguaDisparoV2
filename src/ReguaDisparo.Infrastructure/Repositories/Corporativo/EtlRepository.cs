@@ -24,23 +24,16 @@ public class EtlRepository : IEtlRepository
         {
             _logger.LogDebug("Buscando ETL por organização {IdOrganizacao}", idOrganizacao);
 
-            // Usando a procedure customizada do contexto
-            var etls = await _context.CMCORP_sp_BuscaEtlPorOrganizacao_Results
-                .FromSqlRaw("EXEC CMCORP_sp_BuscaEtlPorOrganizacao @ID_ORGANIZACAO", 
-                    new Microsoft.Data.SqlClient.SqlParameter("@ID_ORGANIZACAO", idOrganizacao))
-                .ToListAsync();
+            // Buscar o ETL completo da tabela
+            var etl = await _context.TB_CMCORP_ETLs
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.ID_ORGANIZACAO == idOrganizacao && e.FL_ETL_ATIVO);
 
-            if (etls.Count == 0)
+            if (etl is null)
             {
                 _logger.LogWarning("ETL não encontrado para organização {IdOrganizacao}", idOrganizacao);
                 return null;
             }
-
-            // Buscar o ETL completo da tabela
-            var etl = await _context.TB_CMCORP_ETLs
-                .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.ID_ETL == etls[0].ID_ETL);
-
             return etl;
         }
         catch (Exception ex)
