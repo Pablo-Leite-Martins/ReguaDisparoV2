@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using ReguaDisparo.Common.Extensions;
 using ReguaDisparo.Core.Interfaces;
 using ReguaDisparo.Domain.Entities.Corporativo;
 
@@ -32,6 +33,10 @@ public class NotificationOrchestrator : INotificationOrchestrator
             var organizacoes = await _organizacaoService.ListarAtivasAsync();
             _logger.LogInformation("Encontradas {Count} organizações ativas", organizacoes.Count);
 
+#if DEBUG
+            organizacoes = organizacoes.Where(x => x.DS_NOME_FANTASIA.Contains("CASA E TERRA E")).ToList();
+#endif
+
             foreach (var organizacao in organizacoes)
             {
                 await ProcessCompanyAsync(organizacao);
@@ -53,8 +58,8 @@ public class NotificationOrchestrator : INotificationOrchestrator
             _logger.LogInformation("Processando empresa {CompanyId}", organizacao.DS_NOME_FANTASIA);
 
             // Verificar se é dia de semana (lógica pode ser movida para configuração)
-            var hoje = DateTime.Now.DayOfWeek;
-            if (hoje == DayOfWeek.Saturday || hoje == DayOfWeek.Sunday)
+            
+            if (!DateTime.Now.IsWeekday())
             {
                 _logger.LogInformation("Fim de semana detectado para {Company}. Verificando configuração...", organizacao.DS_NOME_FANTASIA);
                 // TODO: Verificar configuração de disparo em fim de semana

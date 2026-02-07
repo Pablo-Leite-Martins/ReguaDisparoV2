@@ -108,7 +108,7 @@ public class UauIntegracaoService : IUauIntegracaoService
         {
             string url = webServiceAsmxUrl.TrimEnd('/') + "/Integracao_CAPYS.asmx?wsdl";
             
-            var request = (HttpWebRequest)WebRequest.Create(url);
+            var request = WebRequest.Create(url);
             byte[] buffer = Encoding.UTF8.GetBytes(soapXml);
             
             request.Timeout = 60000;

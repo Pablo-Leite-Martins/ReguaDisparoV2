@@ -157,14 +157,12 @@ public class ReguaCobrancaService : IReguaCobrancaService
             }
 
             // Verificar se PRO_UAU foi executado (apenas para ERP UAU)
-            bool flProUauExecutado = true;
+            bool flProUauExecutado = false;
             if (!string.IsNullOrEmpty(organizacao.COD_ERP_INTEGRACAO) && 
                 organizacao.COD_ERP_INTEGRACAO.Equals("UAU", StringComparison.OrdinalIgnoreCase))
             {
                 _logger.LogDebug("Organiza��o {IdOrganizacao} usa ERP UAU, verificando execu��o do PRO_UAU", 
                     organizacao.ID_ORGANIZACAO);
-                
-                flProUauExecutado = false;
                 
                 if (!string.IsNullOrEmpty(organizacao.DS_URL_WEBSERVICE_CAPYS))
                 {
