@@ -873,7 +873,7 @@ where	emiteboleto_vrc = 0 and tipo_vrc = 0
         public const string PARCELAS_INADIMPLENCIA_CONTAS_RECEBER = @"select * from contasreceber with(nolock) where data_prc < Dateadd(day, -2, Getdate())  and empresa_prc = {0} and obra_prc = '{1}' and numvend_prc = {2}";
 
         public const string PARCELAS_INADIMPLENCIA_CONTAS_RECEBER_TOP1 = @"select TOP 1 * from contasreceber with(nolock) where data_prc < Dateadd(day, -2, Getdate())  and empresa_prc = {0} and obra_prc = '{1}' and numvend_prc = {2}";
-        public const string VERIFICA_EXECUCAO_PROUAU = @"select TOP 1 1 from contasrecebercalc with(nolock) where convert(date,data_prc) = convert(date, getdate())";
+        public const string VERIFICA_EXECUCAO_PROUAU = @"select TOP 1 1 from contasrecebercalc with(nolock) where convert(date,datacalc_crc) = convert(date, getdate())";
 
         public const string PARCELAS_INADIMPLENCIA_CONTAS_RECEBER_PRORROG_PROUAU = @"select * from contasreceber with(nolock) where data_prc < Dateadd(day, -2, Getdate()) and datapror_prc <= DATEADD(dd, 0, DATEDIFF(dd, 0, GETDATE())) and empresa_prc = {0} and obra_prc = '{1}' and numvend_prc = {2}";
 

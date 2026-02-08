@@ -184,7 +184,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
             }
 
             // Criar contexto multi-tenant para esta organização
-            using var crmDb = await _tenantFactory.CreateDbContextAsync(organizacao.NOME_BANCO_CRM!);
+            using var crmDb = await _tenantFactory.CreateDbContextAsync(organizacao.ID_ORGANIZACAO!);
             
             // Buscar r�guas ativas
             var reguaRepo = new ReguaCobrancaRepository(crmDb, (_logger as ILogger<ReguaCobrancaRepository>)!);
