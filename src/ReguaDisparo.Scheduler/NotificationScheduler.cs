@@ -41,8 +41,7 @@ public class NotificationScheduler
         
         if (useHangfire)
         {
-            BackgroundJob.Enqueue<INotificationOrchestrator>(
-                orchestrator => orchestrator.ProcessAllCompaniesAsync());
+            ConfigureJobs();
         }
         else
         {

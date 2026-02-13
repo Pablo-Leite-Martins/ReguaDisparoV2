@@ -30,19 +30,9 @@ public class NotificationOrchestrator : INotificationOrchestrator
         {
             _logger.LogInformation("Iniciando processamento de todas as empresas");
 
-            var organizacoes = await _organizacaoService.ListarAtivasAsync();
-            _logger.LogInformation("Encontradas {Count} organizações ativas", organizacoes.Count);
+            await _reguaCobrancaService.ExecutarReguaCobrancaAsync();
 
-#if DEBUG
-            organizacoes = organizacoes.Where(x => x.DS_NOME_FANTASIA.Contains("CASA E TERRA E")).ToList();
-#endif
-
-            foreach (var organizacao in organizacoes)
-            {
-                await ProcessCompanyAsync(organizacao);
-            }
-
-            _logger.LogInformation("Processamento de todas as empresas conclu�do");
+            _logger.LogInformation("Processamento de todas as empresas concluído");
         }
         catch (Exception ex)
         {

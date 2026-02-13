@@ -21,7 +21,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
 {
     private readonly ILogger<ReguaCobrancaService> _logger;
     private readonly IConfiguration _configuration;
-    private readonly IOrganizacaoRepository _organizacaoRepository;
+    private readonly IOrganizacaoService _organizacaoService;
     private readonly ITenantDbContextFactory _tenantFactory;
     private readonly IEmailService _emailService;
     private readonly IConfigGeralService _configGeralService;
@@ -35,7 +35,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
     public ReguaCobrancaService(
         ILogger<ReguaCobrancaService> logger,
         IConfiguration configuration,
-        IOrganizacaoRepository organizacaoRepository,
+        IOrganizacaoService organizacaoService,
         ITenantDbContextFactory tenantFactory,
         IEmailService emailService,
         IConfigGeralService configGeralService,
@@ -44,7 +44,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
     {
         _logger = logger;
         _configuration = configuration;
-        _organizacaoRepository = organizacaoRepository;
+        _organizacaoService = organizacaoService;
         _tenantFactory = tenantFactory;
         _emailService = emailService;
         _configGeralService = configGeralService;
@@ -61,14 +61,13 @@ public class ReguaCobrancaService : IReguaCobrancaService
         try
         {
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("pt-BR");
-            
-            _logger.LogInformation("=".PadRight(100, '='));
-            _logger.LogInformation("Iniciando execu��o da R�gua de Cobran�a para todas as organiza��es");
 
-            // Lista organiza��es ativas (baseado no c�digo antigo com filtros)
-            var listaOrganizacao = await _organizacaoRepository.ListarAtivasAsync();
-            
-            // Filtrar organiza��es conforme l�gica do projeto antigo
+            _logger.LogInformation("Iniciando execução da Régua de Cobrança para todas as organizações");
+
+            // Lista organizações ativas (baseado no código antigo com filtros)
+            var listaOrganizacao = await _organizacaoService.ListarAtivasAsync();
+
+            // Filtrar organizações conforme lógica do projeto antigo
             var organizacoesFiltradas = listaOrganizacao
                 .Where(o => !string.IsNullOrEmpty(o.NOME_BANCO_CRM))
                 .Where(o => o.ID_ORGANIZACAO != "PLANET_SMART_CITIES" 
