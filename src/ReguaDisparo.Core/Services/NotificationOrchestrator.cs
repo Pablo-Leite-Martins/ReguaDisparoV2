@@ -28,43 +28,15 @@ public class NotificationOrchestrator : INotificationOrchestrator
     {
         try
         {
-            _logger.LogInformation("Iniciando processamento de todas as empresas");
+            _logger.LogInformation("Iniciando execução da Régua de Cobrança para todas as organizações");
 
             await _reguaCobrancaService.ExecutarReguaCobrancaAsync();
 
-            _logger.LogInformation("Processamento de todas as empresas concluído");
+            _logger.LogInformation("Execução de todas as empresas concluído");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao processar todas as empresas");
-            throw;
-        }
-    }
-
-    public async Task ProcessCompanyAsync(TB_CMCORP_ORGANIZACAO organizacao)
-    {
-        try
-        {
-            _logger.LogInformation("Processando empresa {CompanyId}", organizacao.DS_NOME_FANTASIA);
-
-            // Verificar se é dia de semana (lógica pode ser movida para configuração)
-            
-            if (!DateTime.Now.IsWeekday())
-            {
-                _logger.LogInformation("Fim de semana detectado para {Company}. Verificando configuração...", organizacao.DS_NOME_FANTASIA);
-                // TODO: Verificar configuração de disparo em fim de semana
-            }
-
-            _logger.LogInformation("Iniciando processamento de r�guas para {Company}", organizacao.DS_NOME_FANTASIA);
-
-            // Delegar o processamento para o servi�o de r�gua de cobran�a
-            await _reguaCobrancaService.ExecutarReguaCobrancaOrganizacaoAsync(organizacao);
-
-            _logger.LogInformation("Processamento concluído para {Company}", organizacao.DS_NOME_FANTASIA);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao processar empresa {CompanyId}", organizacao.DS_NOME_FANTASIA);
             throw;
         }
     }

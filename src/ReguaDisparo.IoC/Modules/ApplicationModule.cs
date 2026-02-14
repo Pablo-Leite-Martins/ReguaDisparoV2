@@ -58,6 +58,10 @@ namespace ReguaDisparo.IoC
             services.AddScoped<IReguaCobrancaService, ReguaCobrancaService>();
             services.AddScoped<IReguaFiltroService, ReguaFiltroService>();
             services.AddScoped<IComunicacaoService, ComunicacaoService>();
+            
+            // Serviços de comunicação
+            services.AddScoped<ISmsService, TwilioSmsService>();
+            services.AddScoped<IWhatsAppService, TwilioWhatsAppService>();
         }
 
         public static void AddOrchestrators(this IServiceCollection services)

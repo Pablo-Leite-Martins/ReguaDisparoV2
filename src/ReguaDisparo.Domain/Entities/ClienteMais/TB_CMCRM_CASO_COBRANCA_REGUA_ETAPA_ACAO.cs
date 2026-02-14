@@ -37,6 +37,8 @@ public partial class TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO
 
     public bool? FL_ENVIO_UNICO_CONTA { get; set; }
 
+    public bool FL_ACAO_AGENDADA { get; set; }
+
     public virtual TB_CMCRM_EQUIPE_HELP_DESK? ID_EQUIPE_HELPDESKNavigation { get; set; }
 
     public virtual TB_CMCRM_FORMULARIO? ID_FORMULARIONavigation { get; set; }

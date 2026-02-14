@@ -13,13 +13,16 @@ public class ConfigGeralService : IConfigGeralService
 {
     private readonly ILogger<ConfigGeralService> _logger;
     private readonly ITenantDbContextFactory _tenantFactory;
+    private readonly ILoggerFactory _loggerFactory;
 
     public ConfigGeralService(
         ILogger<ConfigGeralService> logger,
-        ITenantDbContextFactory tenantFactory)
+        ITenantDbContextFactory tenantFactory,
+        ILoggerFactory loggerFactory)
     {
         _logger = logger;
         _tenantFactory = tenantFactory;
+        _loggerFactory = loggerFactory;
     }
 
     public async Task<TB_CMCRM_CONFIG_GERAL?> ObterConfiguracaoAsync(string nomeBancoCrm)
@@ -29,7 +32,7 @@ public class ConfigGeralService : IConfigGeralService
             _logger.LogDebug("Obtendo configuração geral para banco {NomeBancoCrm}", nomeBancoCrm);
 
             using var crmDb = await _tenantFactory.CreateDbContextAsync(nomeBancoCrm);
-            var repository = new ConfigGeralRepository(crmDb, (_logger as ILogger<ConfigGeralRepository>)!);
+            var repository = new ConfigGeralRepository(crmDb, _loggerFactory.CreateLogger<ConfigGeralRepository>());
 
             var configuracao = await repository.ListarAsync();
 
@@ -60,57 +63,13 @@ public class ConfigGeralService : IConfigGeralService
             }
 
             var podeDisparar = configuracao.FL_COB_DISPARAR_EMAIL_COBRANCA_FIM_DE_SEMANA;
-            
-            _logger.LogDebug("Configuração de disparo em fim de semana para {NomeBancoCrm}: {PodeDisparar}", 
-                nomeBancoCrm, podeDisparar);
 
             return podeDisparar;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao verificar configuração de disparo em fim de semana para {NomeBancoCrm}", nomeBancoCrm);
-            // Em caso de erro, retorna false por segurança
             return false;
-        }
-    }
-
-    public async Task AtualizarConfiguracaoAsync(TB_CMCRM_CONFIG_GERAL configuracao, string nomeBancoCrm)
-    {
-        try
-        {
-            _logger.LogInformation("Atualizando configuração geral para banco {NomeBancoCrm}", nomeBancoCrm);
-
-            using var crmDb = await _tenantFactory.CreateDbContextAsync(nomeBancoCrm);
-            var repository = new ConfigGeralRepository(crmDb, (_logger as ILogger<ConfigGeralRepository>)!);
-
-            await repository.AtualizarAsync(configuracao);
-
-            _logger.LogInformation("Configuração geral atualizada com sucesso para banco {NomeBancoCrm}", nomeBancoCrm);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao atualizar configuração geral para banco {NomeBancoCrm}", nomeBancoCrm);
-            throw;
-        }
-    }
-
-    public async Task InserirConfiguracaoAsync(TB_CMCRM_CONFIG_GERAL configuracao, string nomeBancoCrm)
-    {
-        try
-        {
-            _logger.LogInformation("Inserindo configuração geral para banco {NomeBancoCrm}", nomeBancoCrm);
-
-            using var crmDb = await _tenantFactory.CreateDbContextAsync(nomeBancoCrm);
-            var repository = new ConfigGeralRepository(crmDb, (_logger as ILogger<ConfigGeralRepository>)!);
-
-            await repository.InserirAsync(configuracao);
-
-            _logger.LogInformation("Configuração geral inserida com sucesso para banco {NomeBancoCrm}", nomeBancoCrm);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao inserir configuração geral para banco {NomeBancoCrm}", nomeBancoCrm);
-            throw;
         }
     }
 }

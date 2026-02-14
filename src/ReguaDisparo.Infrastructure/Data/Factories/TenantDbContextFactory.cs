@@ -26,35 +26,18 @@ public class TenantDbContextFactory : ITenantDbContextFactory
     /// <summary>
     /// Cria um ClienteMaisDbContext para a organização especificada
     /// </summary>
-    public async Task<ClienteMaisDbContext> CreateDbContextAsync(string organizationId)
+    public async Task<ClienteMaisDbContext> CreateDbContextAsync(string nomeBancoCrm)
     {
-        _logger.LogInformation("Criando DbContext para organização {OrganizationId}", organizationId);
+        _logger.LogInformation("Criando DbContext para {nomeBancoCrm}", nomeBancoCrm);
 
-        // Buscar organização no banco Corporativo
-        var organizacao = await _corporativoDb.TB_CMCORP_ORGANIZACAOs
-            .FirstOrDefaultAsync(o => o.ID_ORGANIZACAO == organizationId && o.FL_ATIVO);
-
-        if (organizacao == null)
+        if (string.IsNullOrWhiteSpace(nomeBancoCrm))
         {
-            _logger.LogError("Organização {OrganizationId} não encontrada", organizationId);
-            throw new InvalidOperationException($"Organização '{organizationId}' não encontrada");
+            _logger.LogError("Nome do banco CRM não pode ser vazio");
+            throw new InvalidOperationException($"Nome do banco CRM não pode ser vazio");
         }
-
-        if (string.IsNullOrWhiteSpace(organizacao.NOME_BANCO_CRM))
-        {
-            _logger.LogError("Organização {OrganizationId} não possui NOME_BANCO_CRM configurado", organizationId);
-            throw new InvalidOperationException($"Organização '{organizationId}' não possui banco CRM configurado");
-        }
-
-        _logger.LogInformation("Banco CRM da organização {OrganizationId}: {DatabaseName}", 
-            organizationId, organizacao.NOME_BANCO_CRM);
-
-        return CreateDbContextByDatabaseName(organizacao.NOME_BANCO_CRM);
+        return CreateDbContextByDatabaseName(nomeBancoCrm);
     }
 
-    /// <summary>
-    /// Cria um ClienteMaisDbContext usando o nome do banco diretamente
-    /// </summary>
     public ClienteMaisDbContext CreateDbContextByDatabaseName(string databaseName)
     {
         _logger.LogDebug("Criando DbContext para banco {DatabaseName}", databaseName);

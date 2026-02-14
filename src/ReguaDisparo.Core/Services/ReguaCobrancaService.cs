@@ -13,10 +13,6 @@ using ReguaDisparo.Infrastructure.Repositories.ClienteMais;
 
 namespace ReguaDisparo.Infrastructure.Services;
 
-/// <summary>
-/// Servi�o principal de R�gua de Cobran�a
-/// Baseado em CAPYS_ReguaDisparo_Model.cs do projeto antigo
-/// </summary>
 public class ReguaCobrancaService : IReguaCobrancaService
 {
     private readonly ILogger<ReguaCobrancaService> _logger;
@@ -24,9 +20,12 @@ public class ReguaCobrancaService : IReguaCobrancaService
     private readonly IOrganizacaoService _organizacaoService;
     private readonly ITenantDbContextFactory _tenantFactory;
     private readonly IEmailService _emailService;
+    private readonly ISmsService _smsService;
+    private readonly IWhatsAppService _whatsAppService;
     private readonly IConfigGeralService _configGeralService;
     private readonly IEtlService _etlService;
     private readonly IUauIntegracaoService _uauIntegracaoService;
+    private readonly ILoggerFactory _loggerFactory;
 
     // Constantes do projeto antigo
     private const int NUM_MAX_SMS = 999999;
@@ -38,36 +37,34 @@ public class ReguaCobrancaService : IReguaCobrancaService
         IOrganizacaoService organizacaoService,
         ITenantDbContextFactory tenantFactory,
         IEmailService emailService,
+        ISmsService smsService,
+        IWhatsAppService whatsAppService,
         IConfigGeralService configGeralService,
         IEtlService etlService,
-        IUauIntegracaoService uauIntegracaoService)
+        IUauIntegracaoService uauIntegracaoService,
+        ILoggerFactory loggerFactory)
     {
         _logger = logger;
         _configuration = configuration;
         _organizacaoService = organizacaoService;
         _tenantFactory = tenantFactory;
         _emailService = emailService;
+        _smsService = smsService;
+        _whatsAppService = whatsAppService;
         _configGeralService = configGeralService;
         _etlService = etlService;
         _uauIntegracaoService = uauIntegracaoService;
+        _loggerFactory = loggerFactory;
     }
 
-    /// <summary>
-    /// Executa a r�gua de cobran�a para todas as organiza��es ativas
-    /// Baseado em: ExecutaReguaCobranca()
-    /// </summary>
     public async Task ExecutarReguaCobrancaAsync(CancellationToken cancellationToken = default)
     {
         try
         {
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("pt-BR");
 
-            _logger.LogInformation("Iniciando execução da Régua de Cobrança para todas as organizações");
-
-            // Lista organizações ativas (baseado no código antigo com filtros)
             var listaOrganizacao = await _organizacaoService.ListarAtivasAsync();
 
-            // Filtrar organizações conforme lógica do projeto antigo
             var organizacoesFiltradas = listaOrganizacao
                 .Where(o => !string.IsNullOrEmpty(o.NOME_BANCO_CRM))
                 .Where(o => o.ID_ORGANIZACAO != "PLANET_SMART_CITIES" 
@@ -80,19 +77,16 @@ public class ReguaCobrancaService : IReguaCobrancaService
                 .OrderByDescending(o => o.NOME_BANCO_CRM)
                 .ToList();
 
-            _logger.LogInformation("Encontradas {Count} organiza��es ativas para processar", organizacoesFiltradas.Count);
-
             foreach (var organizacao in organizacoesFiltradas)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    _logger.LogWarning("Execu��o cancelada pelo usu�rio");
+                    _logger.LogWarning("Execução cancelada pelo usuário");
                     break;
                 }
 
                 try
                 {
-                    // Verificar configuração de fim de semana
                     bool podeDispararFimDeSemana = await _configGeralService.PodeDispararEmailFimDeSemanaAsync(organizacao.NOME_BANCO_CRM!);
 
                     bool deveExecutar = DateTime.Now.DayOfWeek != DayOfWeek.Saturday 
@@ -101,7 +95,6 @@ public class ReguaCobrancaService : IReguaCobrancaService
 
                     if (deveExecutar)
                     {
-                        _logger.LogInformation("=".PadRight(100, '='));
                         _logger.LogInformation("{NomeOrganizacao} - R�guas de Disparo - IN�CIO", organizacao.DS_NOME_FANTASIA);
                         
                         await ExecutarReguaCobrancaOrganizacaoAsync(organizacao, cancellationToken);
@@ -155,8 +148,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
                 return;
             }
 
-            // Verificar se PRO_UAU foi executado (apenas para ERP UAU)
-            bool flProUauExecutado = false;
+            bool flProUauExecutado = true;
             if (!string.IsNullOrEmpty(organizacao.COD_ERP_INTEGRACAO) && 
                 organizacao.COD_ERP_INTEGRACAO.Equals("UAU", StringComparison.OrdinalIgnoreCase))
             {
@@ -172,6 +164,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
                 {
                     _logger.LogWarning("Organiza��o {IdOrganizacao} usa UAU mas não possui URL do webservice configurada", 
                         organizacao.ID_ORGANIZACAO);
+                    flProUauExecutado = false;
                 }
 
                 if (!flProUauExecutado)
@@ -182,15 +175,10 @@ public class ReguaCobrancaService : IReguaCobrancaService
                 }
             }
 
-            // Criar contexto multi-tenant para esta organização
             using var crmDb = await _tenantFactory.CreateDbContextAsync(organizacao.ID_ORGANIZACAO!);
             
-            // Buscar r�guas ativas
-            var reguaRepo = new ReguaCobrancaRepository(crmDb, (_logger as ILogger<ReguaCobrancaRepository>)!);
+            var reguaRepo = new ReguaCobrancaRepository(crmDb, _loggerFactory.CreateLogger<ReguaCobrancaRepository>());
             var listaReguas = await reguaRepo.ListarReguasAtivasAsync();
-
-            _logger.LogInformation("Encontradas {Count} r�guas ativas para {NomeOrganizacao}", 
-                listaReguas.Count, organizacao.DS_NOME_FANTASIA);
 
             foreach (var regua in listaReguas)
             {
@@ -215,11 +203,6 @@ public class ReguaCobrancaService : IReguaCobrancaService
             throw;
         }
     }
-
-    /// <summary>
-    /// Processa uma r�gua espec�fica
-    /// L�gica extra�da do ExecutaReguaCobrancaOrganizacao
-    /// </summary>
     private async Task ProcessarReguaAsync(
         TB_CMCORP_ORGANIZACAO organizacao,
         TB_CMCRM_CASO_COBRANCA_REGUA regua,
@@ -257,7 +240,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
                 try
                 {
                     // Buscar a��es da etapa
-                    var acaoRepo = new ReguaCobrancaEtapaAcaoRepository(crmDb, (_logger as ILogger<ReguaCobrancaEtapaAcaoRepository>)!);
+                    var acaoRepo = new ReguaCobrancaEtapaAcaoRepository(crmDb, _loggerFactory.CreateLogger<ReguaCobrancaEtapaAcaoRepository>());
                     var listaAcoes = await acaoRepo.ListarPorReguaEtapaAsync(etapa.ID_CASO_COBRANCA_REGUA_ETAPA);
 
                     if (listaAcoes.Any())
@@ -293,9 +276,12 @@ public class ReguaCobrancaService : IReguaCobrancaService
     {
         try
         {
-            _logger.LogDebug("Executando {Count} a��es para etapa {IdEtapa}", 
+            _logger.LogDebug("Executando {Count} ações para etapa {IdEtapa}", 
                 listaAcoes.Count, reguaEtapa.ID_CASO_COBRANCA_REGUA_ETAPA);
 
+            using var crmDb = await _tenantFactory.CreateDbContextAsync(organizacao.NOME_BANCO_CRM!);
+
+            // Para cada Ação da Etapa
             foreach (var acao in listaAcoes)
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -303,34 +289,155 @@ public class ReguaCobrancaService : IReguaCobrancaService
 
                 try
                 {
-                    // TODO: Implementar l�gica completa de cada tipo de a��o
-                    // Baseado no c�digo antigo, temos v�rios tipos de a��o:
-                    // - EMAIL
-                    // - SMS
-                    // - WHATSAPP
-                    // - ARQUIVO TELEFONIA
-                    // - FGR - COMUNICADO 3
-                    // - FGR - COMUNICADO 6
-                    // - MAC - COBRAN�A
-                    // - RE - CARTA COBRAN�A
-                    // etc...
+                    // Verificar se é ação agendada usando o campo FL_ACAO_AGENDADA
+                    int qtdeEnvioNoDia = 0;
+                    bool existeAgendamento = true;
+                    
+                    if (acao.FL_ACAO_AGENDADA)
+                    {
+                        existeAgendamento = false;
+                        var agendamentos = await ObterAgendamentosPendentesAsync(crmDb, acao);
+                        
+                        foreach (var agendamento in agendamentos)
+                        {
+                            existeAgendamento = true;
+                            await ExecutarAgendamentoAsync(crmDb, agendamento.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA);
+                        }
+                    }
+                    else
+                    {
+                        qtdeEnvioNoDia = await VerificarQuantidadeEnviosNoDiaAsync(crmDb, acao);
+                    }
 
-                    _logger.LogInformation("Processando a��o {IdAcao} - Tipo: {TipoAcao}", 
-                        acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO, acao.ID_TIPO_ACAO);
-
-                    // A implementa��o completa vir� nas pr�ximas etapas
-                    // Por enquanto, apenas logging
+                    // Processa a ação se não foi enviada hoje E (não é agendada OU tem agendamento para executar)
+                    if (qtdeEnvioNoDia == 0 && existeAgendamento)
+                    {
+                        await ProcessarAcaoAsync(organizacao, reguaEtapa, regua, reguaConfig, acao, crmDb, cancellationToken);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Erro ao executar a��o {IdAcao}", acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+                    _logger.LogError(ex, "Erro ao executar ação {IdAcao}", acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
                 }
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao executar a��es da etapa {IdEtapa}", reguaEtapa.ID_CASO_COBRANCA_REGUA_ETAPA);
+            _logger.LogError(ex, "Erro ao executar ações da etapa {IdEtapa}", reguaEtapa.ID_CASO_COBRANCA_REGUA_ETAPA);
             throw;
         }
+    }
+
+    /// <summary>
+    /// Obtém lista de agendamentos pendentes (não enviados) para a ação
+    /// </summary>
+    private async Task<List<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDum>> ObterAgendamentosPendentesAsync(
+        ClienteMaisDbContext crmDb,
+        TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO acao)
+    {
+        try
+        {
+            var agendamentoRepo = new ReguaCobrancaEtapaAcaoAgendamentoRepository(
+                crmDb,
+                _loggerFactory.CreateLogger<ReguaCobrancaEtapaAcaoAgendamentoRepository>());
+
+            var agendamentos = await agendamentoRepo.ListarPorEtapaAcaoAsync(acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+            
+            return agendamentos
+                .Where(x => !x.FL_ENVIADO && x.DT_ENVIO <= DateTime.Now)
+                .OrderBy(x => x.DT_ENVIO)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao obter agendamentos pendentes para ação {IdAcao}", acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+            return new List<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDum>();
+        }
+    }
+
+    /// <summary>
+    /// Executa um agendamento marcando como enviado
+    /// </summary>
+    private async Task ExecutarAgendamentoAsync(ClienteMaisDbContext crmDb, int idAgendamento)
+    {
+        try
+        {
+            var agendamentoRepo = new ReguaCobrancaEtapaAcaoAgendamentoRepository(
+                crmDb,
+                _loggerFactory.CreateLogger<ReguaCobrancaEtapaAcaoAgendamentoRepository>());
+
+            await agendamentoRepo.ExecutarAgendamentoAsync(idAgendamento);
+            
+            _logger.LogDebug("Agendamento {IdAgendamento} executado com sucesso", idAgendamento);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao executar agendamento {IdAgendamento}", idAgendamento);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Verifica quantidade de envios realizados no dia para a ação
+    /// </summary>
+    private async Task<int> VerificarQuantidadeEnviosNoDiaAsync(
+        ClienteMaisDbContext crmDb,
+        TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO acao)
+    {
+        try
+        {
+            var historicoRepo = new ReguaCobrancaHistoricoEnvioRepository(
+                crmDb,
+                _loggerFactory.CreateLogger<ReguaCobrancaHistoricoEnvioRepository>());
+
+            var quantidade = await historicoRepo.QuantidadeRegistrosDataAsync(
+                acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO,
+                DateTime.Now.Date);
+
+            if (quantidade > 0)
+            {
+                _logger.LogInformation("Ação {IdAcao} já possui {Quantidade} envios no dia {Data}", 
+                    acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO, quantidade, DateTime.Now.Date);
+            }
+
+            return quantidade;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao verificar quantidade de envios no dia para ação {IdAcao}", 
+                acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+            return 0;
+        }
+    }
+
+    private async Task ProcessarAcaoAsync(
+        TB_CMCORP_ORGANIZACAO organizacao,
+        TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA reguaEtapa,
+        TB_CMCRM_CASO_COBRANCA_REGUA regua,
+        TB_CMCRM_CASO_COBRANCA_REGUA_CONFIG reguaConfig,
+        TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO acao,
+        ClienteMaisDbContext crmDb,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Processando ação {IdAcao} - {NomeAcao} - Tipo ID: {TipoAcaoId}", 
+            acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO, acao.DS_NOME_ACAO, acao.ID_TIPO_ACAO);
+
+        // TODO: Buscar dados base conforme tipo de ação
+        // Por enquanto, vamos implementar a estrutura básica
+        
+        // Buscar filtros configurados
+        var filtroRepo = new ReguaCobrancaEtapaAcaoFiltroRepository(
+            crmDb,
+            _loggerFactory.CreateLogger<ReguaCobrancaEtapaAcaoFiltroRepository>());
+        
+        var listaFiltros = await filtroRepo.ListarPorAcaoAsync(acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+
+        // TODO: Implementar busca de dados base (ver ListaBaseMensageria, etc do projeto antigo)
+        // TODO: Aplicar filtros aos dados
+        // TODO: Aplicar ordenação se necessário
+        // TODO: Verificar validação da régua
+        // TODO: Executar ação final (envio)
+
+        _logger.LogInformation("Ação {IdAcao} processada com sucesso", acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
     }
 }

@@ -16,14 +16,4 @@ public interface IConfigGeralService
     /// Verifica se deve disparar e-mails de cobrança em fim de semana
     /// </summary>
     Task<bool> PodeDispararEmailFimDeSemanaAsync(string nomeBancoCrm);
-
-    /// <summary>
-    /// Atualiza a configuração geral
-    /// </summary>
-    Task AtualizarConfiguracaoAsync(TB_CMCRM_CONFIG_GERAL configuracao, string nomeBancoCrm);
-
-    /// <summary>
-    /// Insere uma nova configuração geral
-    /// </summary>
-    Task InserirConfiguracaoAsync(TB_CMCRM_CONFIG_GERAL configuracao, string nomeBancoCrm);
 }

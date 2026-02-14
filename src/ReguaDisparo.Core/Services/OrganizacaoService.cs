@@ -25,9 +25,7 @@ public class OrganizacaoService : IOrganizacaoService
     {
         try
         {
-            _logger.LogDebug("Buscando organizações ativas");
             var organizacoes = await _organizacaoRepository.ListarAtivasAsync();
-            _logger.LogDebug("Encontradas {Count} organizações ativas", organizacoes.Count);
             return organizacoes;
         }
         catch (Exception ex)
