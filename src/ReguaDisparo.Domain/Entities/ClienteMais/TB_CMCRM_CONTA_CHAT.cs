@@ -19,7 +19,7 @@ public partial class TB_CMCRM_CONTA_CHAT
 
     public string? NR_TELEFONE_ATENDIMENTO { get; set; }
 
-    public virtual TB_CMCRM_CONTum? ID_CONTANavigation { get; set; }
+    public virtual TB_CMCRM_CONTA? ID_CONTANavigation { get; set; }
 
     public virtual ICollection<TB_CMCRM_CONTA_CHAT_HISTORICO> TB_CMCRM_CONTA_CHAT_HISTORICOs { get; set; } = new List<TB_CMCRM_CONTA_CHAT_HISTORICO>();
 

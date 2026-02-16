@@ -29,7 +29,7 @@ public partial class TB_CMCRM_EMAIL
 
     public virtual ICollection<TB_CMCRM_EMAIL_ANEXO> TB_CMCRM_EMAIL_ANEXOs { get; set; } = new List<TB_CMCRM_EMAIL_ANEXO>();
 
-    public virtual ICollection<TB_CMCRM_EMAIL_RESPOSTum> TB_CMCRM_EMAIL_RESPOSTa { get; set; } = new List<TB_CMCRM_EMAIL_RESPOSTum>();
+    public virtual ICollection<TB_CMCRM_EMAIL_RESPOSTA> TB_CMCRM_EMAIL_RESPOSTa { get; set; } = new List<TB_CMCRM_EMAIL_RESPOSTA>();
 
     public virtual ICollection<TB_CMCRM_USUARIO_EMAIL_TRIAGEM> TB_CMCRM_USUARIO_EMAIL_TRIAGEMs { get; set; } = new List<TB_CMCRM_USUARIO_EMAIL_TRIAGEM>();
 }

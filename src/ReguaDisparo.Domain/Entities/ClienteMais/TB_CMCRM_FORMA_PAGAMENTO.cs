@@ -65,7 +65,7 @@ public partial class TB_CMCRM_FORMA_PAGAMENTO
 
     public int? NR_VENCIMENTO_DIAS_DATA_VENDA_PRIMEIRA_PARCELA { get; set; }
 
-    public virtual TB_CMCRM_MODELO_VENDum ID_MODELO_VENDANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_MODELO_VENDA ID_MODELO_VENDANavigation { get; set; } = null!;
 
     public virtual TB_CMCRM_TIPO_PARCELA ID_TIPO_PARCELANavigation { get; set; } = null!;
 

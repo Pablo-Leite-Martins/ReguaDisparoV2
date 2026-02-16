@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ReguaDisparo.Domain.Entities.ControleAcesso;
@@ -21,7 +21,7 @@ public partial class TB_CMC_ALCADA_CONFIGURACAO
 
     public int? ID_PRODUTO { get; set; }
 
-    public virtual TB_CMC_ALCADum ID_ALCADANavigation { get; set; } = null!;
+    public virtual TB_CMC_ALCADA ID_ALCADANavigation { get; set; } = null!;
 
     public virtual TB_CMC_USUARIO? ID_USUARIONavigation { get; set; }
 }

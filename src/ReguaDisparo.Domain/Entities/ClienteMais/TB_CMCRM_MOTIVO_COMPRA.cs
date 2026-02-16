@@ -9,5 +9,5 @@ public partial class TB_CMCRM_MOTIVO_COMPRA
 
     public string DS_MOTIVO_COMPRA { get; set; } = null!;
 
-    public virtual ICollection<TB_CMCRM_CONTum> TB_CMCRM_CONTa { get; set; } = new List<TB_CMCRM_CONTum>();
+    public virtual ICollection<TB_CMCRM_CONTA> TB_CMCRM_CONTa { get; set; } = new List<TB_CMCRM_CONTA>();
 }

@@ -21,7 +21,7 @@ public partial class TB_CMCRM_CONTA_PRODUTO_PROPONENTE
 
     public virtual TB_CMCRM_CASO ID_CASONavigation { get; set; } = null!;
 
-    public virtual TB_CMCRM_CONTum ID_CONTANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_CONTA ID_CONTANavigation { get; set; } = null!;
 
     public virtual TB_CMCRM_CONTA_PRODUTO? ID_CONTA_PRODUTONavigation { get; set; }
 }

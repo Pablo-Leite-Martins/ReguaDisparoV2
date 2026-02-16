@@ -15,5 +15,5 @@ public partial class TB_CMCRM_TIPO_PERFIL_ATRIBUTO
 
     public virtual TB_CMCRM_TIPO_PERFIL ID_TIPO_PERFILNavigation { get; set; } = null!;
 
-    public virtual ICollection<TB_CMCRM_PERFIL_CONTum> TB_CMCRM_PERFIL_CONTa { get; set; } = new List<TB_CMCRM_PERFIL_CONTum>();
+    public virtual ICollection<TB_CMCRM_PERFIL_CONTA> TB_CMCRM_PERFIL_CONTa { get; set; } = new List<TB_CMCRM_PERFIL_CONTA>();
 }

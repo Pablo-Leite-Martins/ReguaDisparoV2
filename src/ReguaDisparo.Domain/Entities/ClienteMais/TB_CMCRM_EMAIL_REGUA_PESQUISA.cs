@@ -25,7 +25,7 @@ public partial class TB_CMCRM_EMAIL_REGUA_PESQUISA
 
     public virtual TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO? ID_CASO_COBRANCA_REGUA_ETAPA_ACAONavigation { get; set; }
 
-    public virtual TB_CMCRM_CONTum? ID_CONTANavigation { get; set; }
+    public virtual TB_CMCRM_CONTA? ID_CONTANavigation { get; set; }
 
     public virtual TB_CMCRM_FORMULARIO? ID_FORMULARIONavigation { get; set; }
 

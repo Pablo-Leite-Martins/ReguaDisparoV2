@@ -23,7 +23,7 @@ public partial class TB_CMCRM_CONTRATO
 
     public virtual TB_CMCRM_DOCUMENTO_TEMPLATE? ID_DOCUMENTO_TEMPLATENavigation { get; set; }
 
-    public virtual TB_CMCRM_PROPOSTum? ID_PROPOSTANavigation { get; set; }
+    public virtual TB_CMCRM_PROPOSTA? ID_PROPOSTANavigation { get; set; }
 
     public virtual ICollection<TB_CMCRM_ENVELOPE_DOCUSIGN_DOCUMENTO> TB_CMCRM_ENVELOPE_DOCUSIGN_DOCUMENTOs { get; set; } = new List<TB_CMCRM_ENVELOPE_DOCUSIGN_DOCUMENTO>();
 

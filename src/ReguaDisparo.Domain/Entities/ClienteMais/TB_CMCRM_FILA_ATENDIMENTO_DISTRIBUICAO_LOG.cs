@@ -19,7 +19,7 @@ public partial class TB_CMCRM_FILA_ATENDIMENTO_DISTRIBUICAO_LOG
 
     public DateTime? DT_ENVIO { get; set; }
 
-    public virtual TB_CMCRM_CONTum ID_CONTANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_CONTA ID_CONTANavigation { get; set; } = null!;
 
     public virtual TB_CMCRM_FILA_ATENDIMENTO ID_FILA_ATENDIMENTONavigation { get; set; } = null!;
 }

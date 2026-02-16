@@ -29,11 +29,11 @@ public partial class TB_CMCRM_OPORTUNIDADE
 
     public virtual TB_CMCRM_CASO? ID_CASONavigation { get; set; }
 
-    public virtual TB_CMCRM_CONTum ID_CONTANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_CONTA ID_CONTANavigation { get; set; } = null!;
 
     public virtual TB_CMCRM_TIPO_OPORTUNIDADE? ID_TIPO_OPORTUNIDADENavigation { get; set; }
 
     public virtual ICollection<TB_CMCRM_OPORTUNIDADE_PRODUTO> TB_CMCRM_OPORTUNIDADE_PRODUTOs { get; set; } = new List<TB_CMCRM_OPORTUNIDADE_PRODUTO>();
 
-    public virtual ICollection<TB_CMCRM_PROPOSTum> TB_CMCRM_PROPOSTa { get; set; } = new List<TB_CMCRM_PROPOSTum>();
+    public virtual ICollection<TB_CMCRM_PROPOSTA> TB_CMCRM_PROPOSTa { get; set; } = new List<TB_CMCRM_PROPOSTA>();
 }

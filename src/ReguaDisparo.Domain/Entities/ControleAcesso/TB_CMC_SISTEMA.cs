@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ReguaDisparo.Domain.Entities.ControleAcesso;
@@ -11,7 +11,7 @@ public partial class TB_CMC_SISTEMA
 
     public string DS_DESCRICAO { get; set; } = null!;
 
-    public virtual ICollection<TB_CMC_ALCADum> TB_CMC_ALCADa { get; set; } = new List<TB_CMC_ALCADum>();
+    public virtual ICollection<TB_CMC_ALCADA> TB_CMC_ALCADa { get; set; } = new List<TB_CMC_ALCADA>();
 
     public virtual ICollection<TB_CMC_FUNCAO> TB_CMC_FUNCAOs { get; set; } = new List<TB_CMC_FUNCAO>();
 

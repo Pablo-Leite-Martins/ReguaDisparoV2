@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ReguaDisparo.Domain.Entities.ControleAcesso;
@@ -125,7 +125,7 @@ public partial class TB_CMC_USUARIO
 
     public virtual ICollection<TB_CMC_USUARIO_ORGANIZACAO> TB_CMC_USUARIO_ORGANIZACAOs { get; set; } = new List<TB_CMC_USUARIO_ORGANIZACAO>();
 
-    public virtual ICollection<TB_CMC_USUARIO_PREFERENCIum> TB_CMC_USUARIO_PREFERENCIa { get; set; } = new List<TB_CMC_USUARIO_PREFERENCIum>();
+    public virtual ICollection<TB_CMC_USUARIO_PREFERENCIA> TB_CMC_USUARIO_PREFERENCIa { get; set; } = new List<TB_CMC_USUARIO_PREFERENCIA>();
 
     public virtual ICollection<TB_CMC_USUARIO_TELEFONE> TB_CMC_USUARIO_TELEFONEs { get; set; } = new List<TB_CMC_USUARIO_TELEFONE>();
 }

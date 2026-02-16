@@ -32,7 +32,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<CMCRM_VW_REPORT_APROVACAO_ANALISE_CREDITO> CMCRM_VW_REPORT_APROVACAO_ANALISE_CREDITOs { get; set; }
 
-    public virtual DbSet<CMCRM_VW_REPORT_APROVACAO_PROPOSTum> CMCRM_VW_REPORT_APROVACAO_PROPOSTAs { get; set; }
+    public virtual DbSet<CMCRM_VW_REPORT_APROVACAO_PROPOSTA> CMCRM_VW_REPORT_APROVACAO_PROPOSTAs { get; set; }
 
     public virtual DbSet<CMCRM_VW_REPORT_DASHBOARD_ESTOQUE> CMCRM_VW_REPORT_DASHBOARD_ESTOQUEs { get; set; }
 
@@ -138,7 +138,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_AUDIENCIA_ENVIO_LOG> TB_CMCRM_AUDIENCIA_ENVIO_LOGs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_AUDIENCIum> TB_CMCRM_AUDIENCIAs { get; set; }
+    public virtual DbSet<TB_CMCRM_AUDIENCIA> TB_CMCRM_AUDIENCIAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_CADASTRO_DIRECIONAMENTO> TB_CMCRM_CADASTRO_DIRECIONAMENTOs { get; set; }
 
@@ -228,7 +228,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_CASO_COBRANCA_FILA_DATA_RETORNO> TB_CMCRM_CASO_COBRANCA_FILA_DATA_RETORNOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_CASO_COBRANCA_MOTVO_INADIMPLENCIum> TB_CMCRM_CASO_COBRANCA_MOTVO_INADIMPLENCIAs { get; set; }
+    public virtual DbSet<TB_CMCRM_CASO_COBRANCA_MOTVO_INADIMPLENCIA> TB_CMCRM_CASO_COBRANCA_MOTVO_INADIMPLENCIAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_CASO_COBRANCA_NEGOCIACAO> TB_CMCRM_CASO_COBRANCA_NEGOCIACAOs { get; set; }
 
@@ -256,7 +256,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO> TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDum> TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDAs { get; set; }
+    public virtual DbSet<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA> TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_FILTRO> TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_FILTROs { get; set; }
 
@@ -302,17 +302,17 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_CASO_HISTORICO> TB_CMCRM_CASO_HISTORICOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_CASO_HISTORICO_BKP_ALTERADO_DIRETum> TB_CMCRM_CASO_HISTORICO_BKP_ALTERADO_DIRETAs { get; set; }
+    public virtual DbSet<TB_CMCRM_CASO_HISTORICO_BKP_ALTERADO_DIRETA> TB_CMCRM_CASO_HISTORICO_BKP_ALTERADO_DIRETAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_CASO_HISTORICO_LOG> TB_CMCRM_CASO_HISTORICO_LOGs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_CASO_HISTORICO_SINCRONIum> TB_CMCRM_CASO_HISTORICO_SINCRONIAs { get; set; }
+    public virtual DbSet<TB_CMCRM_CASO_HISTORICO_SINCRONIA> TB_CMCRM_CASO_HISTORICO_SINCRONIAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_CASO_LOG> TB_CMCRM_CASO_LOGs { get; set; }
 
     public virtual DbSet<TB_CMCRM_CASO_PARALIZACAO_SLA> TB_CMCRM_CASO_PARALIZACAO_SLAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIum> TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIAs { get; set; }
+    public virtual DbSet<TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIA> TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_CASO_REPASSE_DADO> TB_CMCRM_CASO_REPASSE_DADOs { get; set; }
 
@@ -346,7 +346,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_CASO_VINCULADO_LOG> TB_CMCRM_CASO_VINCULADO_LOGs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_CASO_VISITum> TB_CMCRM_CASO_VISITAs { get; set; }
+    public virtual DbSet<TB_CMCRM_CASO_VISITA> TB_CMCRM_CASO_VISITAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_CASO_VISTORIA_CODIGO_ASSINATURA> TB_CMCRM_CASO_VISTORIA_CODIGO_ASSINATURAs { get; set; }
 
@@ -380,9 +380,9 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_COMODO_ASSISTENCIA_TEC> TB_CMCRM_COMODO_ASSISTENCIA_TECs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_COMODO_ITEM_PERGUNTum> TB_CMCRM_COMODO_ITEM_PERGUNTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_COMODO_ITEM_PERGUNTA> TB_CMCRM_COMODO_ITEM_PERGUNTAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_COMODO_ITEM_RESPOSTum> TB_CMCRM_COMODO_ITEM_RESPOSTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_COMODO_ITEM_RESPOSTA> TB_CMCRM_COMODO_ITEM_RESPOSTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_COMPROMISSO> TB_CMCRM_COMPROMISSOs { get; set; }
 
@@ -398,7 +398,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_COMPROMISSO_DISPONIVEL_VISTORIA_LOG> TB_CMCRM_COMPROMISSO_DISPONIVEL_VISTORIA_LOGs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_COMPROMISSO_DISPONIVEL_VISTORIum> TB_CMCRM_COMPROMISSO_DISPONIVEL_VISTORIAs { get; set; }
+    public virtual DbSet<TB_CMCRM_COMPROMISSO_DISPONIVEL_VISTORIA> TB_CMCRM_COMPROMISSO_DISPONIVEL_VISTORIAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_COMPROMISSO_LOG> TB_CMCRM_COMPROMISSO_LOGs { get; set; }
 
@@ -408,7 +408,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_COMUNICADO_AGENDAMENTO_AUDIENCIA_LOG> TB_CMCRM_COMUNICADO_AGENDAMENTO_AUDIENCIA_LOGs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_COMUNICADO_AGENDAMENTO_AUDIENCIum> TB_CMCRM_COMUNICADO_AGENDAMENTO_AUDIENCIAs { get; set; }
+    public virtual DbSet<TB_CMCRM_COMUNICADO_AGENDAMENTO_AUDIENCIA> TB_CMCRM_COMUNICADO_AGENDAMENTO_AUDIENCIAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_CONFIGS_URA> TB_CMCRM_CONFIGS_URAs { get; set; }
 
@@ -466,7 +466,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_CONTRATO_STATUS> TB_CMCRM_CONTRATO_STATUSes { get; set; }
 
-    public virtual DbSet<TB_CMCRM_CONTum> TB_CMCRM_CONTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_CONTA> TB_CMCRM_CONTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_CUSTO> TB_CMCRM_CUSTOs { get; set; }
 
@@ -518,7 +518,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_DYNAMICS_PROTOCOLOS_DADOS_ASSISTENCIA_PLANILHA> TB_CMCRM_DYNAMICS_PROTOCOLOS_DADOS_ASSISTENCIA_PLANILHAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_DYNAMICS_PROTOCOLOS_DADOS_ASSISTENCIum> TB_CMCRM_DYNAMICS_PROTOCOLOS_DADOS_ASSISTENCIAs { get; set; }
+    public virtual DbSet<TB_CMCRM_DYNAMICS_PROTOCOLOS_DADOS_ASSISTENCIA> TB_CMCRM_DYNAMICS_PROTOCOLOS_DADOS_ASSISTENCIAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_DYNAMICS_PROTOCOLOS_DADOS_OBSERVACO> TB_CMCRM_DYNAMICS_PROTOCOLOS_DADOS_OBSERVACOEs { get; set; }
 
@@ -536,13 +536,13 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_EMAIL_CONTA_GRUPO> TB_CMCRM_EMAIL_CONTA_GRUPOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_EMAIL_CONTum> TB_CMCRM_EMAIL_CONTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_EMAIL_CONTA> TB_CMCRM_EMAIL_CONTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_EMAIL_PESQUISA_SATISFACAO> TB_CMCRM_EMAIL_PESQUISA_SATISFACAOs { get; set; }
 
     public virtual DbSet<TB_CMCRM_EMAIL_REGUA_PESQUISA> TB_CMCRM_EMAIL_REGUA_PESQUISAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_EMAIL_RESPOSTum> TB_CMCRM_EMAIL_RESPOSTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_EMAIL_RESPOSTA> TB_CMCRM_EMAIL_RESPOSTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_EMPREENDIMENTO_PA> TB_CMCRM_EMPREENDIMENTO_PAs { get; set; }
 
@@ -566,7 +566,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_EQUIPE_HELP_DESK> TB_CMCRM_EQUIPE_HELP_DESKs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_EQUIPE_HELP_DESK_GERENCIum> TB_CMCRM_EQUIPE_HELP_DESK_GERENCIAs { get; set; }
+    public virtual DbSet<TB_CMCRM_EQUIPE_HELP_DESK_GERENCIA> TB_CMCRM_EQUIPE_HELP_DESK_GERENCIAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_EQUIPE_USUARIO_HELP_DESK> TB_CMCRM_EQUIPE_USUARIO_HELP_DESKs { get; set; }
 
@@ -586,7 +586,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_ESTRUTURA_COMISSAO_LOG> TB_CMCRM_ESTRUTURA_COMISSAO_LOGs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDum> TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDAs { get; set; }
+    public virtual DbSet<TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDA> TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_ESTRUTURA_COMISSAO_PRODUTO> TB_CMCRM_ESTRUTURA_COMISSAO_PRODUTOs { get; set; }
 
@@ -594,11 +594,11 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_ETAPA_CATEGORIA_ATENDIMENTO_TIPO_CASO_GRUPO> TB_CMCRM_ETAPA_CATEGORIA_ATENDIMENTO_TIPO_CASO_GRUPOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_ETAPA_JORNADum> TB_CMCRM_ETAPA_JORNADAs { get; set; }
+    public virtual DbSet<TB_CMCRM_ETAPA_JORNADA> TB_CMCRM_ETAPA_JORNADAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_ETAPA_TIPO_CASO> TB_CMCRM_ETAPA_TIPO_CASOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_ETAPA_TIPO_CASO_ANTES_ALTERACAO_VISTORIum> TB_CMCRM_ETAPA_TIPO_CASO_ANTES_ALTERACAO_VISTORIAs { get; set; }
+    public virtual DbSet<TB_CMCRM_ETAPA_TIPO_CASO_ANTES_ALTERACAO_VISTORIA> TB_CMCRM_ETAPA_TIPO_CASO_ANTES_ALTERACAO_VISTORIAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_ETAPA_TIPO_CASO_GRUPO> TB_CMCRM_ETAPA_TIPO_CASO_GRUPOs { get; set; }
 
@@ -620,9 +620,9 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_FORMULARIO_PRODUTO> TB_CMCRM_FORMULARIO_PRODUTOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTum> TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTA> TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_FORMULARIO_PRODUTO_RESPOSTum> TB_CMCRM_FORMULARIO_PRODUTO_RESPOSTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_FORMULARIO_PRODUTO_RESPOSTA> TB_CMCRM_FORMULARIO_PRODUTO_RESPOSTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_FORMULARIO_RESPOSTA_JUSTIFICATIVA> TB_CMCRM_FORMULARIO_RESPOSTA_JUSTIFICATIVAs { get; set; }
 
@@ -664,7 +664,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_INVESTIMENTO_MARKETING> TB_CMCRM_INVESTIMENTO_MARKETINGs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_ITERUP_FATO_RESPOSTum> TB_CMCRM_ITERUP_FATO_RESPOSTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_ITERUP_FATO_RESPOSTA> TB_CMCRM_ITERUP_FATO_RESPOSTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_KIT> TB_CMCRM_KITs { get; set; }
 
@@ -688,13 +688,13 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_MODELO_VENDA_UNIDADE_PRECO> TB_CMCRM_MODELO_VENDA_UNIDADE_PRECOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_MODELO_VENDum> TB_CMCRM_MODELO_VENDAs { get; set; }
+    public virtual DbSet<TB_CMCRM_MODELO_VENDA> TB_CMCRM_MODELO_VENDAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_MOTIVO_CANCELAMENTO> TB_CMCRM_MOTIVO_CANCELAMENTOs { get; set; }
 
     public virtual DbSet<TB_CMCRM_MOTIVO_COMPRA> TB_CMCRM_MOTIVO_COMPRAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_MOTIVO_NAO_PROCEDENCIum> TB_CMCRM_MOTIVO_NAO_PROCEDENCIAs { get; set; }
+    public virtual DbSet<TB_CMCRM_MOTIVO_NAO_PROCEDENCIA> TB_CMCRM_MOTIVO_NAO_PROCEDENCIAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_MOTIVO_PARALIZACAO_SLA> TB_CMCRM_MOTIVO_PARALIZACAO_SLAs { get; set; }
 
@@ -710,7 +710,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_OBSERVACAO_COBRANCA> TB_CMCRM_OBSERVACAO_COBRANCAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_OPCAO_PLANTum> TB_CMCRM_OPCAO_PLANTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_OPCAO_PLANTA> TB_CMCRM_OPCAO_PLANTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_OPORTUNIDADE> TB_CMCRM_OPORTUNIDADEs { get; set; }
 
@@ -748,7 +748,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_PARCELAS_SERASA_ANTES_EXCLUIR_ID_6_DIGITO> TB_CMCRM_PARCELAS_SERASA_ANTES_EXCLUIR_ID_6_DIGITOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_PERFIL_CONTum> TB_CMCRM_PERFIL_CONTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_PERFIL_CONTA> TB_CMCRM_PERFIL_CONTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_PERFIL_FINANCEIRO_ACAO_FILTRO> TB_CMCRM_PERFIL_FINANCEIRO_ACAO_FILTROs { get; set; }
 
@@ -756,19 +756,19 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_PERFIL_FINANCEIRO_CLASSIFICACAO> TB_CMCRM_PERFIL_FINANCEIRO_CLASSIFICACAOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_PERFIL_FINANCEIRO_CONTum> TB_CMCRM_PERFIL_FINANCEIRO_CONTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_PERFIL_FINANCEIRO_CONTA> TB_CMCRM_PERFIL_FINANCEIRO_CONTAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_PERFIL_TIPO_CONTum> TB_CMCRM_PERFIL_TIPO_CONTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_PERFIL_TIPO_CONTA> TB_CMCRM_PERFIL_TIPO_CONTAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_PERGUNTum> TB_CMCRM_PERGUNTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_PERGUNTA> TB_CMCRM_PERGUNTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_PESQUISA_SATISFACAO_SIMPLIFICADA_ENVIO> TB_CMCRM_PESQUISA_SATISFACAO_SIMPLIFICADA_ENVIOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_PESQUISA_SATISFACAO_SIMPLIFICADA_RESPOSTum> TB_CMCRM_PESQUISA_SATISFACAO_SIMPLIFICADA_RESPOSTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_PESQUISA_SATISFACAO_SIMPLIFICADA_RESPOSTA> TB_CMCRM_PESQUISA_SATISFACAO_SIMPLIFICADA_RESPOSTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_PLAN_VENDA> TB_CMCRM_PLAN_VENDAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_PONTO_VENDum> TB_CMCRM_PONTO_VENDAs { get; set; }
+    public virtual DbSet<TB_CMCRM_PONTO_VENDA> TB_CMCRM_PONTO_VENDAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_PRODUTO> TB_CMCRM_PRODUTOs { get; set; }
 
@@ -796,7 +796,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_PRODUTO_TIPO_CARACTERISTICA> TB_CMCRM_PRODUTO_TIPO_CARACTERISTICAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_PROPOSTA_CONTum> TB_CMCRM_PROPOSTA_CONTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_PROPOSTA_CONTA> TB_CMCRM_PROPOSTA_CONTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_PROPOSTA_ESTRUTURA_COMISSAO_FLEXIVEL> TB_CMCRM_PROPOSTA_ESTRUTURA_COMISSAO_FLEXIVELs { get; set; }
 
@@ -806,7 +806,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_PROPOSTA_PRODUTO> TB_CMCRM_PROPOSTA_PRODUTOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_PROPOSTum> TB_CMCRM_PROPOSTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_PROPOSTA> TB_CMCRM_PROPOSTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_PUNICAO_USUARIO> TB_CMCRM_PUNICAO_USUARIOs { get; set; }
 
@@ -826,7 +826,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_RESPOSTA_JUSTIFICATIVA> TB_CMCRM_RESPOSTA_JUSTIFICATIVAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_RESPOSTum> TB_CMCRM_RESPOSTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_RESPOSTA> TB_CMCRM_RESPOSTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_SEGMENTO> TB_CMCRM_SEGMENTOs { get; set; }
 
@@ -892,7 +892,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_TAG_CONTA_SISTEMA> TB_CMCRM_TAG_CONTA_SISTEMAs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_TAG_CONTum> TB_CMCRM_TAG_CONTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_TAG_CONTA> TB_CMCRM_TAG_CONTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_TAG_SISTEMA> TB_CMCRM_TAG_SISTEMAs { get; set; }
 
@@ -912,7 +912,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_TIPO_CONTRATO_REPASSE> TB_CMCRM_TIPO_CONTRATO_REPASSEs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_TIPO_CONTum> TB_CMCRM_TIPO_CONTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_TIPO_CONTA> TB_CMCRM_TIPO_CONTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_TIPO_DOCUMENTO> TB_CMCRM_TIPO_DOCUMENTOs { get; set; }
 
@@ -940,7 +940,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_TIPO_PERFIL_ETAPA_TIPO_CASO> TB_CMCRM_TIPO_PERFIL_ETAPA_TIPO_CASOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_TIPO_PERGUNTum> TB_CMCRM_TIPO_PERGUNTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_TIPO_PERGUNTA> TB_CMCRM_TIPO_PERGUNTAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_TIPO_PESO_ATENDIMENTO> TB_CMCRM_TIPO_PESO_ATENDIMENTOs { get; set; }
 
@@ -948,13 +948,13 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_TIPO_PRODUTO> TB_CMCRM_TIPO_PRODUTOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_TIPO_RECORRENCIum> TB_CMCRM_TIPO_RECORRENCIAs { get; set; }
+    public virtual DbSet<TB_CMCRM_TIPO_RECORRENCIA> TB_CMCRM_TIPO_RECORRENCIAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_TIPO_RELACAO_CLIENTE> TB_CMCRM_TIPO_RELACAO_CLIENTEs { get; set; }
 
     public virtual DbSet<TB_CMCRM_TIPO_SERVICO> TB_CMCRM_TIPO_SERVICOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_TIPO_VISITum> TB_CMCRM_TIPO_VISITAs { get; set; }
+    public virtual DbSet<TB_CMCRM_TIPO_VISITA> TB_CMCRM_TIPO_VISITAs { get; set; }
 
     public virtual DbSet<TB_CMCRM_TOTVS_DOCUMENTO_IMPORTACAO> TB_CMCRM_TOTVS_DOCUMENTO_IMPORTACAOs { get; set; }
 
@@ -1030,7 +1030,7 @@ public partial class ClienteMaisDbContext : DbContext
 
     public virtual DbSet<TB_CMCRM_VENDAS_FATO_CASO> TB_CMCRM_VENDAS_FATO_CASOs { get; set; }
 
-    public virtual DbSet<TB_CMCRM_VENDAS_FATO_CONTum> TB_CMCRM_VENDAS_FATO_CONTAs { get; set; }
+    public virtual DbSet<TB_CMCRM_VENDAS_FATO_CONTA> TB_CMCRM_VENDAS_FATO_CONTAs { get; set; }
 
     public virtual DbSet<TEMP_MAURO> TEMP_MAUROs { get; set; }
 
@@ -1372,7 +1372,7 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.VALIDADE).HasColumnType("datetime");
         });
 
-        modelBuilder.Entity<CMCRM_VW_REPORT_APROVACAO_PROPOSTum>(entity =>
+        modelBuilder.Entity<CMCRM_VW_REPORT_APROVACAO_PROPOSTA>(entity =>
         {
             entity
                 .HasNoKey()
@@ -2423,7 +2423,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_AUDIENCIum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_AUDIENCIA>(entity =>
         {
             entity.HasKey(e => e.ID_AUDIENCIA).HasName("PK__TB_CMCRM__4ED5F9081EF03DF9");
 
@@ -3630,7 +3630,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_CASO_COBRANCA_MOTVO_INADIMPLENCIum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_CASO_COBRANCA_MOTVO_INADIMPLENCIA>(entity =>
         {
             entity.HasKey(e => e.ID_CASO_COBRANCA_MOTVO_INADIMPLENCIA);
 
@@ -3956,7 +3956,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_TB_CMCRM_FORMULARIO");
         });
 
-        modelBuilder.Entity<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA>(entity =>
         {
             entity.HasKey(e => e.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA).HasName("PK__TB_CMCRM__66E9501519418644");
 
@@ -4460,7 +4460,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMCRM_CASO_HISTORICO_TB_CMCRM_CASO_ATIVIDADE");
         });
 
-        modelBuilder.Entity<TB_CMCRM_CASO_HISTORICO_BKP_ALTERADO_DIRETum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_CASO_HISTORICO_BKP_ALTERADO_DIRETA>(entity =>
         {
             entity
                 .HasNoKey()
@@ -4483,7 +4483,7 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.DT_EXCLUSAO).HasColumnType("datetime");
         });
 
-        modelBuilder.Entity<TB_CMCRM_CASO_HISTORICO_SINCRONIum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_CASO_HISTORICO_SINCRONIA>(entity =>
         {
             entity.HasKey(e => e.ID_CASO_HISTORICO_SINCRONIA);
 
@@ -4532,7 +4532,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMA_CASO_PARALIZACAO_SLA_TB_CMA_MOTIVO_PARALIZACAO_SLA");
         });
 
-        modelBuilder.Entity<TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIA>(entity =>
         {
             entity.HasKey(e => e.ID_CASO_PARALIZACAO_SLA_VISTORIA).HasName("PK__TB_CMCRM__5053AD0256FF8CF2");
 
@@ -5233,7 +5233,7 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.DT_EXCLUSAO).HasColumnType("datetime");
         });
 
-        modelBuilder.Entity<TB_CMCRM_CASO_VISITum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_CASO_VISITA>(entity =>
         {
             entity.HasKey(e => e.ID_CASO_VISITA);
 
@@ -5491,7 +5491,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_COMODO_ITEM_PERGUNTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_COMODO_ITEM_PERGUNTA>(entity =>
         {
             entity.HasKey(e => e.ID_COMODO_ITEM_PERGUNTA).HasName("PK__TB_CMCRM__AAA6A35C314EE556");
 
@@ -5502,7 +5502,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_COMODO_ITEM_RESPOSTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_COMODO_ITEM_RESPOSTA>(entity =>
         {
             entity.HasKey(e => e.ID_COMODO_ITEM_RESPOSTA).HasName("PK__TB_CMCRM__E8F5ECA3351F763A");
 
@@ -5629,7 +5629,7 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.DT_INICIO).HasColumnType("datetime");
         });
 
-        modelBuilder.Entity<TB_CMCRM_COMPROMISSO_DISPONIVEL_VISTORIum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_COMPROMISSO_DISPONIVEL_VISTORIA>(entity =>
         {
             entity.HasKey(e => e.ID_COMPROMISSO_DISPONIVEL_VISTORIA);
 
@@ -5711,7 +5711,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK__TB_CMCRM___ID_CO__4A4F9D4A");
         });
 
-        modelBuilder.Entity<TB_CMCRM_COMUNICADO_AGENDAMENTO_AUDIENCIum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_COMUNICADO_AGENDAMENTO_AUDIENCIA>(entity =>
         {
             entity.HasKey(e => e.ID_COMUNICADO_AGENDAMENTO_AUDIENCIA).HasName("PK__TB_CMCRM__712EA0A242AE7B82");
 
@@ -6474,7 +6474,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_CONTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_CONTA>(entity =>
         {
             entity.HasKey(e => e.ID_CONTA).HasName("PK_TB_CMCORP_CONTA");
 
@@ -7310,7 +7310,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_DYNAMICS_PROTOCOLOS_DADOS_ASSISTENCIum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_DYNAMICS_PROTOCOLOS_DADOS_ASSISTENCIA>(entity =>
         {
             entity
                 .HasNoKey()
@@ -7488,7 +7488,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMCRM_EMAIL_CONTA_GRUPO_TB_CMCRM_EMAIL_CONTA");
         });
 
-        modelBuilder.Entity<TB_CMCRM_EMAIL_CONTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_EMAIL_CONTA>(entity =>
         {
             entity.HasKey(e => e.ID_EMAIL_CONTA);
 
@@ -7561,7 +7561,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMCRM_EMAIL_REGUA_PESQUISA_TB_CMCRM_PRODUTO");
         });
 
-        modelBuilder.Entity<TB_CMCRM_EMAIL_RESPOSTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_EMAIL_RESPOSTA>(entity =>
         {
             entity.HasKey(e => e.ID_EMAIL_RESPOSTA).HasName("PK__TB_CMCRM__C59CA1625FE9D8AE");
 
@@ -7800,7 +7800,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMCRM_EQUIPE_HELP_DESK_FORMULARIO");
         });
 
-        modelBuilder.Entity<TB_CMCRM_EQUIPE_HELP_DESK_GERENCIum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_EQUIPE_HELP_DESK_GERENCIA>(entity =>
         {
             entity.HasKey(e => e.ID_EQUIPE_GERENCIA).HasName("PK__TB_CMCRM__B08D2A1F3E3E00C9");
 
@@ -8009,7 +8009,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMCRM_ESTRUTURA_COMISSAO_LOG_TB_CMCRM_ESTRUTURA_COMISSAO");
         });
 
-        modelBuilder.Entity<TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDA>(entity =>
         {
             entity.HasKey(e => e.ID_ESTRUTURA_COMISSAO_MODELO_VENDA);
 
@@ -8082,7 +8082,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMCRM_ETAPA_CATEGORIA_ATENDIMENTO_TIPO_CASO_GRUPO_TB_CMCRM_ETAPA_CATEGORIA_ATENDIMENTO_TIPO_CASO");
         });
 
-        modelBuilder.Entity<TB_CMCRM_ETAPA_JORNADum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_ETAPA_JORNADA>(entity =>
         {
             entity.HasKey(e => e.ID_ETAPA_JORNADA).HasName("PK__TB_CMCRM__46B6649F76233290");
 
@@ -8118,7 +8118,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMA_ETAPA_TIPO_CASO_TB_CMA_TIPO_CASO");
         });
 
-        modelBuilder.Entity<TB_CMCRM_ETAPA_TIPO_CASO_ANTES_ALTERACAO_VISTORIum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_ETAPA_TIPO_CASO_ANTES_ALTERACAO_VISTORIA>(entity =>
         {
             entity
                 .HasNoKey()
@@ -8405,7 +8405,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK__TB_CMCRM___ID_PR__4ACEC037");
         });
 
-        modelBuilder.Entity<TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTA>(entity =>
         {
             entity.HasKey(e => e.ID_FORMULARIO_PRODUTO_PERGUNTA).HasName("PK__TB_CMCRM__DC5230FD4DAB2CE2");
 
@@ -8430,7 +8430,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK__TB_CMCRM___ID_TI__4F937554");
         });
 
-        modelBuilder.Entity<TB_CMCRM_FORMULARIO_PRODUTO_RESPOSTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_FORMULARIO_PRODUTO_RESPOSTA>(entity =>
         {
             entity.HasKey(e => e.ID_FORMULARIO_PRODUTO_RESPOSTA).HasName("PK__TB_CMCRM__D64C95A954582A71");
 
@@ -8836,7 +8836,7 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.VL_INVESTIMENTO).HasColumnType("decimal(18, 2)");
         });
 
-        modelBuilder.Entity<TB_CMCRM_ITERUP_FATO_RESPOSTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_ITERUP_FATO_RESPOSTA>(entity =>
         {
             entity
                 .HasNoKey()
@@ -9012,7 +9012,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMCRM_MODELO_VENDA_UNIDADE_PRECO_TB_CMCRM_UNIDADE_PRECO");
         });
 
-        modelBuilder.Entity<TB_CMCRM_MODELO_VENDum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_MODELO_VENDA>(entity =>
         {
             entity.HasKey(e => e.ID_MODELO_VENDA);
 
@@ -9062,7 +9062,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_MOTIVO_NAO_PROCEDENCIum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_MOTIVO_NAO_PROCEDENCIA>(entity =>
         {
             entity.HasKey(e => e.ID_MOTIVO_NAO_PROCEDENCIA);
 
@@ -9158,7 +9158,7 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.DS_OBSERVACAO_COBRANCA).IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_OPCAO_PLANTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_OPCAO_PLANTA>(entity =>
         {
             entity.HasKey(e => e.ID_OPCAO_PLANTA).HasName("PK__TB_CMCRM__67E8402C648E923A");
 
@@ -9549,7 +9549,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_PERFIL_CONTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_PERFIL_CONTA>(entity =>
         {
             entity.HasKey(e => e.ID_PERFIL_CONTA);
 
@@ -9621,7 +9621,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_PERFIL_FINANCEIRO_CONTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_PERFIL_FINANCEIRO_CONTA>(entity =>
         {
             entity.HasKey(e => e.ID_PERFIL_FINANCEIRO_CONTA).HasName("PK__TB_CMCRM__7FC5790D79F3C374");
 
@@ -9638,7 +9638,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_PERFIL_TIPO_CONTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_PERFIL_TIPO_CONTA>(entity =>
         {
             entity.HasKey(e => e.ID_PERFIL_TIPO_CONTA).HasName("PK__TB_CMCRM__E2DB43377252A1AC");
 
@@ -9655,7 +9655,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_PERGUNTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_PERGUNTA>(entity =>
         {
             entity.HasKey(e => e.ID_PERGUNTA).HasName("PK_MONIT.DRC_PERGUNTA");
 
@@ -9692,7 +9692,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMCRM_CONTA_CHAT_TB_CMCRM_PESQUISA_SATISFACAO_SIMPLIFICADA_ENVIO");
         });
 
-        modelBuilder.Entity<TB_CMCRM_PESQUISA_SATISFACAO_SIMPLIFICADA_RESPOSTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_PESQUISA_SATISFACAO_SIMPLIFICADA_RESPOSTA>(entity =>
         {
             entity.HasKey(e => e.ID_PESQUISA_SATISFACAO_SIMPLIFICADA_RESPOSTA).HasName("PK__TB_CMCRM__481FFB3805BA7BDB");
 
@@ -9716,7 +9716,7 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.VL_FINANCEIRO_PLAN).HasColumnType("decimal(18, 2)");
         });
 
-        modelBuilder.Entity<TB_CMCRM_PONTO_VENDum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_PONTO_VENDA>(entity =>
         {
             entity.HasKey(e => e.ID_PONTO_VENDA);
 
@@ -10417,7 +10417,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMA_PRODUTO_CARACTERISTICA_TB_CMA_TIPO_CARACTERISTICA");
         });
 
-        modelBuilder.Entity<TB_CMCRM_PROPOSTA_CONTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_PROPOSTA_CONTA>(entity =>
         {
             entity.HasKey(e => e.ID_PROPOSTA_CONTA);
 
@@ -10527,7 +10527,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMCRM_PROPOSTA_PRODUTO_TB_CMCRM_PROPOSTA");
         });
 
-        modelBuilder.Entity<TB_CMCRM_PROPOSTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_PROPOSTA>(entity =>
         {
             entity.HasKey(e => e.ID_PROPOSTA);
 
@@ -10739,7 +10739,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK__TB_CMCRM___ID_RE__38060486");
         });
 
-        modelBuilder.Entity<TB_CMCRM_RESPOSTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_RESPOSTA>(entity =>
         {
             entity.HasKey(e => e.ID_RESPOSTA).HasName("PK_MONIT.DRC_RESPOSTA");
 
@@ -11555,7 +11555,7 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.FL_ATIVO).HasDefaultValue(true);
         });
 
-        modelBuilder.Entity<TB_CMCRM_TAG_CONTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_TAG_CONTA>(entity =>
         {
             entity.HasKey(e => e.ID_TAG_CONTA).HasName("PK__TB_CMCRM__46E0098031D8F53B");
 
@@ -11719,7 +11719,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_TIPO_CONTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_TIPO_CONTA>(entity =>
         {
             entity.HasKey(e => e.ID_TIPO_CONTA);
 
@@ -11920,7 +11920,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .HasConstraintName("FK_TB_CMCRM_TIPO_PERFIL_TB_CMCRM_TIPO_PERFIL_ETAPA_TIPO_CASO");
         });
 
-        modelBuilder.Entity<TB_CMCRM_TIPO_PERGUNTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_TIPO_PERGUNTA>(entity =>
         {
             entity.HasKey(e => e.ID_TIPO_PERGUNTA).HasName("PK.TB_CMCRM_TIPO_PERGUNTA");
 
@@ -11972,7 +11972,7 @@ public partial class ClienteMaisDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<TB_CMCRM_TIPO_RECORRENCIum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_TIPO_RECORRENCIA>(entity =>
         {
             entity.HasKey(e => e.ID_TIPO_RECORRENCIA).HasName("PK_TB_CMA_TIPO_RECORRENCIA");
 
@@ -12007,7 +12007,7 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.VL_SERVICO).HasColumnType("decimal(18, 2)");
         });
 
-        modelBuilder.Entity<TB_CMCRM_TIPO_VISITum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_TIPO_VISITA>(entity =>
         {
             entity.HasKey(e => e.ID_TIPO_VISITA);
 
@@ -13397,7 +13397,7 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.VL_VPL_PROPOSTA).HasColumnType("decimal(18, 2)");
         });
 
-        modelBuilder.Entity<TB_CMCRM_VENDAS_FATO_CONTum>(entity =>
+        modelBuilder.Entity<TB_CMCRM_VENDAS_FATO_CONTA>(entity =>
         {
             entity
                 .HasNoKey()

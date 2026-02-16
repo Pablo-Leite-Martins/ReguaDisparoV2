@@ -11,7 +11,7 @@ public partial class TB_CMCRM_MODELO_VENDA_PRODUTO
 
     public int ID_PRODUTO { get; set; }
 
-    public virtual TB_CMCRM_MODELO_VENDum ID_MODELO_VENDANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_MODELO_VENDA ID_MODELO_VENDANavigation { get; set; } = null!;
 
     public virtual TB_CMCRM_PRODUTO ID_PRODUTONavigation { get; set; } = null!;
 

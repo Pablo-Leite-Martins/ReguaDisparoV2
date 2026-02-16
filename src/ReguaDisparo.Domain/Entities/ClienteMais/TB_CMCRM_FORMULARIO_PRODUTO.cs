@@ -15,5 +15,5 @@ public partial class TB_CMCRM_FORMULARIO_PRODUTO
 
     public virtual TB_CMCRM_PRODUTO ID_PRODUTONavigation { get; set; } = null!;
 
-    public virtual ICollection<TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTum> TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTa { get; set; } = new List<TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTum>();
+    public virtual ICollection<TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTA> TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTa { get; set; } = new List<TB_CMCRM_FORMULARIO_PRODUTO_PERGUNTA>();
 }

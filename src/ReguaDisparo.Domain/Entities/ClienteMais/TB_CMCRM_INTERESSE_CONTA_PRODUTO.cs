@@ -35,7 +35,7 @@ public partial class TB_CMCRM_INTERESSE_CONTA_PRODUTO
 
     public int? ID_PRODUTO_TERCIARIO { get; set; }
 
-    public virtual TB_CMCRM_CONTum ID_CONTANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_CONTA ID_CONTANavigation { get; set; } = null!;
 
     public virtual TB_CMCRM_PRODUTO? ID_PRODUTO_PRINCIPALNavigation { get; set; }
 

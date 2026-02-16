@@ -29,7 +29,7 @@ public partial class TB_CMCRM_PARCELAS_SERASA
 
     public string? NR_CNPJ { get; set; }
 
-    public virtual TB_CMCRM_CONTum? ID_CONTANavigation { get; set; }
+    public virtual TB_CMCRM_CONTA? ID_CONTANavigation { get; set; }
 
     public virtual TB_CMCRM_CONTATO? ID_CONTATO_FIADORNavigation { get; set; }
 }

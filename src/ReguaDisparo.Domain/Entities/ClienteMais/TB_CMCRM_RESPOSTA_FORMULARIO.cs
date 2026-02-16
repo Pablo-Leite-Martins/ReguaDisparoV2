@@ -43,7 +43,7 @@ public partial class TB_CMCRM_RESPOSTA_FORMULARIO
 
     public virtual TB_CMCRM_EMAIL_REGUA_PESQUISA? ID_EMAIL_REGUA_PESQUISANavigation { get; set; }
 
-    public virtual TB_CMCRM_RESPOSTum? ID_RESPOSTANavigation { get; set; }
+    public virtual TB_CMCRM_RESPOSTA? ID_RESPOSTANavigation { get; set; }
 
     public virtual ICollection<TB_CMCRM_FORMULARIO_RESPOSTA_JUSTIFICATIVA> TB_CMCRM_FORMULARIO_RESPOSTA_JUSTIFICATIVAs { get; set; } = new List<TB_CMCRM_FORMULARIO_RESPOSTA_JUSTIFICATIVA>();
 }

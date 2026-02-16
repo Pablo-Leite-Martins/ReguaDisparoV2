@@ -15,5 +15,5 @@ public partial class TB_CMCRM_PROPOSTA_PRODUTO
 
     public virtual TB_CMCRM_PRODUTO ID_PRODUTONavigation { get; set; } = null!;
 
-    public virtual TB_CMCRM_PROPOSTum ID_PROPOSTANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_PROPOSTA ID_PROPOSTANavigation { get; set; } = null!;
 }

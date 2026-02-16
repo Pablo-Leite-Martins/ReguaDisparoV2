@@ -21,5 +21,5 @@ public partial class TB_CMCRM_PROPOSTA_ESTRUTURA_COMISSAO_FLEXIVEL
 
     public virtual TB_CMCRM_ESTRUTURA_COMISSAO_FLEXIVEL ID_ESTRUTURA_COMISSAO_FLEXIVELNavigation { get; set; } = null!;
 
-    public virtual TB_CMCRM_PROPOSTum ID_PROPOSTANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_PROPOSTA ID_PROPOSTANavigation { get; set; } = null!;
 }

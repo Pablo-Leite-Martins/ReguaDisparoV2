@@ -239,7 +239,7 @@ public partial class TB_CMCRM_PRODUTO
 
     public virtual TB_CMCRM_CLASSIFICACAO_PRODUTO ID_CLASSIFICACAO_PRODUTONavigation { get; set; } = null!;
 
-    public virtual TB_CMCRM_ETAPA_JORNADum? ID_ETAPA_JORNADANavigation { get; set; }
+    public virtual TB_CMCRM_ETAPA_JORNADA? ID_ETAPA_JORNADANavigation { get; set; }
 
     public virtual TB_CMCRM_PRODUTO? ID_PRODUTO_PAINavigation { get; set; }
 
@@ -287,7 +287,7 @@ public partial class TB_CMCRM_PRODUTO
 
     public virtual ICollection<TB_CMCRM_MODELO_VENDA_PRODUTO> TB_CMCRM_MODELO_VENDA_PRODUTOs { get; set; } = new List<TB_CMCRM_MODELO_VENDA_PRODUTO>();
 
-    public virtual ICollection<TB_CMCRM_MODELO_VENDum> TB_CMCRM_MODELO_VENDa { get; set; } = new List<TB_CMCRM_MODELO_VENDum>();
+    public virtual ICollection<TB_CMCRM_MODELO_VENDA> TB_CMCRM_MODELO_VENDa { get; set; } = new List<TB_CMCRM_MODELO_VENDA>();
 
     public virtual ICollection<TB_CMCRM_OPORTUNIDADE_PRODUTO> TB_CMCRM_OPORTUNIDADE_PRODUTOs { get; set; } = new List<TB_CMCRM_OPORTUNIDADE_PRODUTO>();
 

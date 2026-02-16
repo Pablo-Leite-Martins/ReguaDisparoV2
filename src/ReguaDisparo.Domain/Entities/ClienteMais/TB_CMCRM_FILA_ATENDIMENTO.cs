@@ -27,7 +27,7 @@ public partial class TB_CMCRM_FILA_ATENDIMENTO
 
     public virtual TB_CMCRM_ORIGEM_LEAD? ID_ORIGEM_LEADNavigation { get; set; }
 
-    public virtual TB_CMCRM_PONTO_VENDum? ID_PONTO_VENDANavigation { get; set; }
+    public virtual TB_CMCRM_PONTO_VENDA? ID_PONTO_VENDANavigation { get; set; }
 
     public virtual ICollection<TB_CMCRM_FILA_ATENDIMENTO_DISTRIBUICAO_LOG> TB_CMCRM_FILA_ATENDIMENTO_DISTRIBUICAO_LOGs { get; set; } = new List<TB_CMCRM_FILA_ATENDIMENTO_DISTRIBUICAO_LOG>();
 

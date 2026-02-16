@@ -53,5 +53,5 @@ public partial class TB_CMCRM_EQUIPE_VENDA
 
     public virtual ICollection<TB_CMCRM_ORIGEM_LEAD_EQUIPE_VENDA> TB_CMCRM_ORIGEM_LEAD_EQUIPE_VENDAs { get; set; } = new List<TB_CMCRM_ORIGEM_LEAD_EQUIPE_VENDA>();
 
-    public virtual ICollection<TB_CMCRM_PROPOSTum> TB_CMCRM_PROPOSTa { get; set; } = new List<TB_CMCRM_PROPOSTum>();
+    public virtual ICollection<TB_CMCRM_PROPOSTA> TB_CMCRM_PROPOSTa { get; set; } = new List<TB_CMCRM_PROPOSTA>();
 }

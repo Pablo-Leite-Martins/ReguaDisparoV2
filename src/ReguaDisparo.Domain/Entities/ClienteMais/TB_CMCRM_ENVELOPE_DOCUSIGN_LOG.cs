@@ -25,7 +25,7 @@ public partial class TB_CMCRM_ENVELOPE_DOCUSIGN_LOG
 
     public int ID_USUARIO_RESPONSAVEL { get; set; }
 
-    public virtual TB_CMCRM_CONTum? ID_CONTANavigation { get; set; }
+    public virtual TB_CMCRM_CONTA? ID_CONTANavigation { get; set; }
 
     public virtual TB_CMCRM_CONTATO? ID_CONTATONavigation { get; set; }
 

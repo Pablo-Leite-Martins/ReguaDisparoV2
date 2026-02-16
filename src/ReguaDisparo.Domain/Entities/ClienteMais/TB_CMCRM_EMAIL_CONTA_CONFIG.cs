@@ -27,7 +27,7 @@ public partial class TB_CMCRM_EMAIL_CONTA_CONFIG
 
     public virtual TB_CMCRM_DOCUMENTO_TEMPLATE ID_DOCUMENTO_TEMPLATENavigation { get; set; } = null!;
 
-    public virtual TB_CMCRM_EMAIL_CONTum ID_EMAIL_CONTANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_EMAIL_CONTA ID_EMAIL_CONTANavigation { get; set; } = null!;
 
     public virtual TB_CMCRM_TIPO_CANAL_ATENDIMENTO ID_TIPO_CANAL_ATENDIMENTONavigation { get; set; } = null!;
 

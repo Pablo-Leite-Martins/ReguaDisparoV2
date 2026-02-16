@@ -71,7 +71,7 @@ public partial class TB_CMCRM_CASO
 
     public virtual TB_CMCRM_TIPO_PESO_ATENDIMENTO? ID_TIPO_PESO_ATENDIMENTONavigation { get; set; }
 
-    public virtual TB_CMCRM_TIPO_RECORRENCIum? ID_TIPO_RECORRENCIANavigation { get; set; }
+    public virtual TB_CMCRM_TIPO_RECORRENCIA? ID_TIPO_RECORRENCIANavigation { get; set; }
 
     public virtual ICollection<TB_CMCRM_ANALISE_CREDITO> TB_CMCRM_ANALISE_CREDITOs { get; set; } = new List<TB_CMCRM_ANALISE_CREDITO>();
 
@@ -97,7 +97,7 @@ public partial class TB_CMCRM_CASO
 
     public virtual ICollection<TB_CMCRM_CASO_HISTORICO> TB_CMCRM_CASO_HISTORICOs { get; set; } = new List<TB_CMCRM_CASO_HISTORICO>();
 
-    public virtual ICollection<TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIum> TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIa { get; set; } = new List<TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIum>();
+    public virtual ICollection<TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIA> TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIa { get; set; } = new List<TB_CMCRM_CASO_PARALIZACAO_SLA_VISTORIA>();
 
     public virtual ICollection<TB_CMCRM_CASO_PARALIZACAO_SLA> TB_CMCRM_CASO_PARALIZACAO_SLAs { get; set; } = new List<TB_CMCRM_CASO_PARALIZACAO_SLA>();
 
@@ -117,7 +117,7 @@ public partial class TB_CMCRM_CASO
 
     public virtual ICollection<TB_CMCRM_CASO_VINCULADO> TB_CMCRM_CASO_VINCULADOID_CASO_VINCULADONavigations { get; set; } = new List<TB_CMCRM_CASO_VINCULADO>();
 
-    public virtual ICollection<TB_CMCRM_CASO_VISITum> TB_CMCRM_CASO_VISITa { get; set; } = new List<TB_CMCRM_CASO_VISITum>();
+    public virtual ICollection<TB_CMCRM_CASO_VISITA> TB_CMCRM_CASO_VISITa { get; set; } = new List<TB_CMCRM_CASO_VISITA>();
 
     public virtual ICollection<TB_CMCRM_CASO_VISTORIA_CODIGO_ASSINATURA> TB_CMCRM_CASO_VISTORIA_CODIGO_ASSINATURAs { get; set; } = new List<TB_CMCRM_CASO_VISTORIA_CODIGO_ASSINATURA>();
 

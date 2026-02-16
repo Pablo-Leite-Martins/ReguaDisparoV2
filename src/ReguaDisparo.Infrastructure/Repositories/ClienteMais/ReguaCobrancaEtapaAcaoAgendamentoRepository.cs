@@ -18,14 +18,14 @@ public class ReguaCobrancaEtapaAcaoAgendamentoRepository : IReguaCobrancaEtapaAc
         _logger = logger;
     }
 
-    public async Task<List<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDum>> ListarAsync()
+    public async Task<List<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA>> ListarAsync()
     {
         return await _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDAs
             .AsNoTracking()
             .ToListAsync();
     }
 
-    public async Task<List<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDum>> ListarPorEtapaAcaoAsync(int idEtapaAcao)
+    public async Task<List<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA>> ListarPorEtapaAcaoAsync(int idEtapaAcao)
     {
         return await _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDAs
             .AsNoTracking()
@@ -33,19 +33,19 @@ public class ReguaCobrancaEtapaAcaoAgendamentoRepository : IReguaCobrancaEtapaAc
             .ToListAsync();
     }
 
-    public async Task<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDum?> BuscarAsync(int idAgenda)
+    public async Task<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA?> BuscarAsync(int idAgenda)
     {
         return await _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDAs
             .FindAsync(idAgenda);
     }
 
-    public async Task InserirAsync(TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDum entidade)
+    public async Task InserirAsync(TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA entidade)
     {
         await _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDAs.AddAsync(entidade);
         await _context.SaveChangesAsync();
     }
 
-    public async Task AtualizarAsync(TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDum entidade)
+    public async Task AtualizarAsync(TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA entidade)
     {
         _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDAs.Update(entidade);
         await _context.SaveChangesAsync();

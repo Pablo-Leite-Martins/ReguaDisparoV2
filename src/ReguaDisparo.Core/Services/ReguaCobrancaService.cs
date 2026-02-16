@@ -25,6 +25,8 @@ public class ReguaCobrancaService : IReguaCobrancaService
     private readonly IConfigGeralService _configGeralService;
     private readonly IEtlService _etlService;
     private readonly IUauIntegracaoService _uauIntegracaoService;
+    private readonly IReguaCobrancaEtapaAcaoAgendamentoService _agendamentoService;
+    private readonly IReguaCobrancaHistoricoEnvioService _historicoEnvioService;
     private readonly ILoggerFactory _loggerFactory;
 
     // Constantes do projeto antigo
@@ -42,6 +44,8 @@ public class ReguaCobrancaService : IReguaCobrancaService
         IConfigGeralService configGeralService,
         IEtlService etlService,
         IUauIntegracaoService uauIntegracaoService,
+        IReguaCobrancaEtapaAcaoAgendamentoService agendamentoService,
+        IReguaCobrancaHistoricoEnvioService historicoEnvioService,
         ILoggerFactory loggerFactory)
     {
         _logger = logger;
@@ -54,6 +58,8 @@ public class ReguaCobrancaService : IReguaCobrancaService
         _configGeralService = configGeralService;
         _etlService = etlService;
         _uauIntegracaoService = uauIntegracaoService;
+        _agendamentoService = agendamentoService;
+        _historicoEnvioService = historicoEnvioService;
         _loggerFactory = loggerFactory;
     }
 
@@ -296,17 +302,27 @@ public class ReguaCobrancaService : IReguaCobrancaService
                     if (acao.FL_ACAO_AGENDADA)
                     {
                         existeAgendamento = false;
-                        var agendamentos = await ObterAgendamentosPendentesAsync(crmDb, acao);
+                        var agendamentos = await _agendamentoService.ObterAgendamentosPendentesAsync(
+                            acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO, 
+                            organizacao.NOME_BANCO_CRM!);
+                        
+                        // Filtra apenas os que chegou a hora de executar
+                        agendamentos = agendamentos.Where(a => a.DT_ENVIO <= DateTime.Now).ToList();
                         
                         foreach (var agendamento in agendamentos)
                         {
                             existeAgendamento = true;
-                            await ExecutarAgendamentoAsync(crmDb, agendamento.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA);
+                            await _agendamentoService.ExecutarAgendamentoAsync(
+                                agendamento.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA, 
+                                organizacao.NOME_BANCO_CRM!);
                         }
                     }
                     else
                     {
-                        qtdeEnvioNoDia = await VerificarQuantidadeEnviosNoDiaAsync(crmDb, acao);
+                        qtdeEnvioNoDia = await _historicoEnvioService.VerificarQuantidadeEnviosNoDiaAsync(
+                            acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO,
+                            DateTime.Now.Date,
+                            organizacao.NOME_BANCO_CRM!);
                     }
 
                     // Processa a ação se não foi enviada hoje E (não é agendada OU tem agendamento para executar)
@@ -325,88 +341,6 @@ public class ReguaCobrancaService : IReguaCobrancaService
         {
             _logger.LogError(ex, "Erro ao executar ações da etapa {IdEtapa}", reguaEtapa.ID_CASO_COBRANCA_REGUA_ETAPA);
             throw;
-        }
-    }
-
-    /// <summary>
-    /// Obtém lista de agendamentos pendentes (não enviados) para a ação
-    /// </summary>
-    private async Task<List<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDum>> ObterAgendamentosPendentesAsync(
-        ClienteMaisDbContext crmDb,
-        TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO acao)
-    {
-        try
-        {
-            var agendamentoRepo = new ReguaCobrancaEtapaAcaoAgendamentoRepository(
-                crmDb,
-                _loggerFactory.CreateLogger<ReguaCobrancaEtapaAcaoAgendamentoRepository>());
-
-            var agendamentos = await agendamentoRepo.ListarPorEtapaAcaoAsync(acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
-            
-            return agendamentos
-                .Where(x => !x.FL_ENVIADO && x.DT_ENVIO <= DateTime.Now)
-                .OrderBy(x => x.DT_ENVIO)
-                .ToList();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao obter agendamentos pendentes para ação {IdAcao}", acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
-            return new List<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDum>();
-        }
-    }
-
-    /// <summary>
-    /// Executa um agendamento marcando como enviado
-    /// </summary>
-    private async Task ExecutarAgendamentoAsync(ClienteMaisDbContext crmDb, int idAgendamento)
-    {
-        try
-        {
-            var agendamentoRepo = new ReguaCobrancaEtapaAcaoAgendamentoRepository(
-                crmDb,
-                _loggerFactory.CreateLogger<ReguaCobrancaEtapaAcaoAgendamentoRepository>());
-
-            await agendamentoRepo.ExecutarAgendamentoAsync(idAgendamento);
-            
-            _logger.LogDebug("Agendamento {IdAgendamento} executado com sucesso", idAgendamento);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao executar agendamento {IdAgendamento}", idAgendamento);
-            throw;
-        }
-    }
-
-    /// <summary>
-    /// Verifica quantidade de envios realizados no dia para a ação
-    /// </summary>
-    private async Task<int> VerificarQuantidadeEnviosNoDiaAsync(
-        ClienteMaisDbContext crmDb,
-        TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO acao)
-    {
-        try
-        {
-            var historicoRepo = new ReguaCobrancaHistoricoEnvioRepository(
-                crmDb,
-                _loggerFactory.CreateLogger<ReguaCobrancaHistoricoEnvioRepository>());
-
-            var quantidade = await historicoRepo.QuantidadeRegistrosDataAsync(
-                acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO,
-                DateTime.Now.Date);
-
-            if (quantidade > 0)
-            {
-                _logger.LogInformation("Ação {IdAcao} já possui {Quantidade} envios no dia {Data}", 
-                    acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO, quantidade, DateTime.Now.Date);
-            }
-
-            return quantidade;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao verificar quantidade de envios no dia para ação {IdAcao}", 
-                acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
-            return 0;
         }
     }
 

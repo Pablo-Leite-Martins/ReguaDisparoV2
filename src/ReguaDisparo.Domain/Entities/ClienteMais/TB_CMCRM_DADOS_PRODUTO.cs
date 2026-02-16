@@ -33,7 +33,7 @@ public partial class TB_CMCRM_DADOS_PRODUTO
 
     public bool? FL_VISTORIA_ANTECIPADA { get; set; }
 
-    public virtual TB_CMCRM_OPCAO_PLANTum? ID_OPCAO_PLANTANavigation { get; set; }
+    public virtual TB_CMCRM_OPCAO_PLANTA? ID_OPCAO_PLANTANavigation { get; set; }
 
     public virtual TB_CMCRM_PRODUTO ID_PRODUTONavigation { get; set; } = null!;
 }

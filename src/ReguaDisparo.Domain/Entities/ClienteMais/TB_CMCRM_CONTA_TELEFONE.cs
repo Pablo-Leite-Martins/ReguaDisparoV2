@@ -21,5 +21,5 @@ public partial class TB_CMCRM_CONTA_TELEFONE
 
     public string? DS_OBS { get; set; }
 
-    public virtual TB_CMCRM_CONTum ID_CONTANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_CONTA ID_CONTANavigation { get; set; } = null!;
 }

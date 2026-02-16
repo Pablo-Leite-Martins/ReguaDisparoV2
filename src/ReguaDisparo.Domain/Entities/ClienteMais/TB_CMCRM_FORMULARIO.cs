@@ -29,5 +29,5 @@ public partial class TB_CMCRM_FORMULARIO
 
     public virtual ICollection<TB_CMCRM_FORMULARIO_UNIDADE> TB_CMCRM_FORMULARIO_UNIDADEs { get; set; } = new List<TB_CMCRM_FORMULARIO_UNIDADE>();
 
-    public virtual ICollection<TB_CMCRM_PERGUNTum> TB_CMCRM_PERGUNTa { get; set; } = new List<TB_CMCRM_PERGUNTum>();
+    public virtual ICollection<TB_CMCRM_PERGUNTA> TB_CMCRM_PERGUNTa { get; set; } = new List<TB_CMCRM_PERGUNTA>();
 }

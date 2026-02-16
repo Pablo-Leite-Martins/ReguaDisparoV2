@@ -15,5 +15,5 @@ public partial class TB_CMCRM_PROPOSTA_LOG
 
     public int? ID_USUARIO { get; set; }
 
-    public virtual TB_CMCRM_PROPOSTum ID_PROPOSTANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_PROPOSTA ID_PROPOSTANavigation { get; set; } = null!;
 }

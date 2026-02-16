@@ -55,7 +55,7 @@ public partial class TB_CMCRM_CATEGORIA_ATENDIMENTO
 
     public virtual ICollection<TB_CMCRM_CONFIG_GERAL> TB_CMCRM_CONFIG_GERALs { get; set; } = new List<TB_CMCRM_CONFIG_GERAL>();
 
-    public virtual ICollection<TB_CMCRM_CONTum> TB_CMCRM_CONTa { get; set; } = new List<TB_CMCRM_CONTum>();
+    public virtual ICollection<TB_CMCRM_CONTA> TB_CMCRM_CONTa { get; set; } = new List<TB_CMCRM_CONTA>();
 
     public virtual ICollection<TB_CMCRM_DOCUMENTO_TEMPLATE_FORMULARIO> TB_CMCRM_DOCUMENTO_TEMPLATE_FORMULARIOs { get; set; } = new List<TB_CMCRM_DOCUMENTO_TEMPLATE_FORMULARIO>();
 

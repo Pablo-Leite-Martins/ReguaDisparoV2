@@ -27,7 +27,7 @@ public partial class TB_CMCRM_UNIDADE_PRECO
 
     public virtual ICollection<TB_CMCRM_MODELO_VENDA_UNIDADE_PRECO> TB_CMCRM_MODELO_VENDA_UNIDADE_PRECOs { get; set; } = new List<TB_CMCRM_MODELO_VENDA_UNIDADE_PRECO>();
 
-    public virtual ICollection<TB_CMCRM_PROPOSTum> TB_CMCRM_PROPOSTa { get; set; } = new List<TB_CMCRM_PROPOSTum>();
+    public virtual ICollection<TB_CMCRM_PROPOSTA> TB_CMCRM_PROPOSTa { get; set; } = new List<TB_CMCRM_PROPOSTA>();
 
     public virtual ICollection<TB_CMCRM_UNIDADE_PRECO_LOG> TB_CMCRM_UNIDADE_PRECO_LOGs { get; set; } = new List<TB_CMCRM_UNIDADE_PRECO_LOG>();
 

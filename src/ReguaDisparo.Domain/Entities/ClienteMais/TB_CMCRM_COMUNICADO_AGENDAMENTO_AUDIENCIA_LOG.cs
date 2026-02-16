@@ -15,5 +15,5 @@ public partial class TB_CMCRM_COMUNICADO_AGENDAMENTO_AUDIENCIA_LOG
 
     public bool FL_ENVIADO { get; set; }
 
-    public virtual TB_CMCRM_COMUNICADO_AGENDAMENTO_AUDIENCIum ID_COMUNICADO_AGENDAMENTO_AUDIENCIANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_COMUNICADO_AGENDAMENTO_AUDIENCIA ID_COMUNICADO_AGENDAMENTO_AUDIENCIANavigation { get; set; } = null!;
 }

@@ -25,5 +25,5 @@ public partial class TB_CMCRM_CONTA_FILA_ENTREGA
 
     public DateTime DT_ENTRADA_FILA { get; set; }
 
-    public virtual TB_CMCRM_CONTum ID_CONTANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_CONTA ID_CONTANavigation { get; set; } = null!;
 }

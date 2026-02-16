@@ -31,7 +31,7 @@ public partial class TB_CMCRM_ENVELOPE_DOCUSIGN_DESTINATARIO
 
     public DateTime? DT_ASSINATURA { get; set; }
 
-    public virtual TB_CMCRM_CONTum? ID_CONTANavigation { get; set; }
+    public virtual TB_CMCRM_CONTA? ID_CONTANavigation { get; set; }
 
     public virtual TB_CMCRM_CONTATO? ID_CONTATONavigation { get; set; }
 

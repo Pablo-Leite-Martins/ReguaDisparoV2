@@ -56,6 +56,8 @@ namespace ReguaDisparo.IoC
             
             // Serviços de régua de cobrança
             services.AddScoped<IReguaCobrancaService, ReguaCobrancaService>();
+            services.AddScoped<IReguaCobrancaEtapaAcaoAgendamentoService, ReguaCobrancaEtapaAcaoAgendamentoService>();
+            services.AddScoped<IReguaCobrancaHistoricoEnvioService, ReguaCobrancaHistoricoEnvioService>();
             services.AddScoped<IReguaFiltroService, ReguaFiltroService>();
             services.AddScoped<IComunicacaoService, ComunicacaoService>();
             

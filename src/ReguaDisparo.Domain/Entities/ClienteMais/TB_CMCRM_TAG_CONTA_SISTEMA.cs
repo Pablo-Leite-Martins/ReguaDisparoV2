@@ -21,5 +21,5 @@ public partial class TB_CMCRM_TAG_CONTA_SISTEMA
 
     public string? DS_OBSERVACAO { get; set; }
 
-    public virtual ICollection<TB_CMCRM_TAG_CONTum> TB_CMCRM_TAG_CONTa { get; set; } = new List<TB_CMCRM_TAG_CONTum>();
+    public virtual ICollection<TB_CMCRM_TAG_CONTA> TB_CMCRM_TAG_CONTa { get; set; } = new List<TB_CMCRM_TAG_CONTA>();
 }

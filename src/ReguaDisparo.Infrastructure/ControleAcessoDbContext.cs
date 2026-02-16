@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ReguaDisparo.Domain.Entities.ControleAcesso;
@@ -17,7 +17,7 @@ public partial class ControleAcessoDbContext : DbContext
 
     public virtual DbSet<TB_CMC_ALCADA_CONFIGURACAO> TB_CMC_ALCADA_CONFIGURACAOs { get; set; }
 
-    public virtual DbSet<TB_CMC_ALCADum> TB_CMC_ALCADAs { get; set; }
+    public virtual DbSet<TB_CMC_ALCADA> TB_CMC_ALCADAs { get; set; }
 
     public virtual DbSet<TB_CMC_CARGO> TB_CMC_CARGOs { get; set; }
 
@@ -67,7 +67,7 @@ public partial class ControleAcessoDbContext : DbContext
 
     public virtual DbSet<TB_CMC_USUARIO_ORGANIZACAO> TB_CMC_USUARIO_ORGANIZACAOs { get; set; }
 
-    public virtual DbSet<TB_CMC_USUARIO_PREFERENCIum> TB_CMC_USUARIO_PREFERENCIAs { get; set; }
+    public virtual DbSet<TB_CMC_USUARIO_PREFERENCIA> TB_CMC_USUARIO_PREFERENCIAs { get; set; }
 
     public virtual DbSet<TB_CMC_USUARIO_TELEFONE> TB_CMC_USUARIO_TELEFONEs { get; set; }
 
@@ -97,7 +97,7 @@ public partial class ControleAcessoDbContext : DbContext
                 .HasConstraintName("FK_TB_CMC_ALCADA_CONFIGURACAO_TB_CMC_USUARIO");
         });
 
-        modelBuilder.Entity<TB_CMC_ALCADum>(entity =>
+        modelBuilder.Entity<TB_CMC_ALCADA>(entity =>
         {
             entity.HasKey(e => e.ID_ALCADA);
 
@@ -765,7 +765,7 @@ public partial class ControleAcessoDbContext : DbContext
                 .HasConstraintName("FK_USUARIO");
         });
 
-        modelBuilder.Entity<TB_CMC_USUARIO_PREFERENCIum>(entity =>
+        modelBuilder.Entity<TB_CMC_USUARIO_PREFERENCIA>(entity =>
         {
             entity.HasKey(e => new { e.ID_USUARIO, e.DS_PREFERENCIA });
 

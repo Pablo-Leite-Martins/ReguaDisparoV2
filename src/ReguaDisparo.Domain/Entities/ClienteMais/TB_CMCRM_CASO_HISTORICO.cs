@@ -39,5 +39,5 @@ public partial class TB_CMCRM_CASO_HISTORICO
 
     public virtual TB_CMCRM_CASO_ATIVIDADE? ID_CASO_ATIVIDADENavigation { get; set; }
 
-    public virtual ICollection<TB_CMCRM_CASO_HISTORICO_SINCRONIum> TB_CMCRM_CASO_HISTORICO_SINCRONIa { get; set; } = new List<TB_CMCRM_CASO_HISTORICO_SINCRONIum>();
+    public virtual ICollection<TB_CMCRM_CASO_HISTORICO_SINCRONIA> TB_CMCRM_CASO_HISTORICO_SINCRONIa { get; set; } = new List<TB_CMCRM_CASO_HISTORICO_SINCRONIA>();
 }

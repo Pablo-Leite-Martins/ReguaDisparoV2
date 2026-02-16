@@ -47,9 +47,9 @@ public partial class TB_CMCRM_COMPROMISSO
 
     public virtual TB_CMCRM_CASO_ATIVIDADE? ID_CASO_ATIVIDADENavigation { get; set; }
 
-    public virtual TB_CMCRM_CASO_VISITum? ID_CASO_VISITANavigation { get; set; }
+    public virtual TB_CMCRM_CASO_VISITA? ID_CASO_VISITANavigation { get; set; }
 
-    public virtual TB_CMCRM_CONTum? ID_CONTANavigation { get; set; }
+    public virtual TB_CMCRM_CONTA? ID_CONTANavigation { get; set; }
 
     public virtual TB_CMCRM_CONTATO? ID_CONTATONavigation { get; set; }
 

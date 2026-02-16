@@ -23,7 +23,7 @@ public partial class TB_CMCRM_PRODUTO_RESERVA
 
     public string? ID_CHAVE_ERP { get; set; }
 
-    public virtual TB_CMCRM_CONTum? ID_CONTANavigation { get; set; }
+    public virtual TB_CMCRM_CONTA? ID_CONTANavigation { get; set; }
 
     public virtual TB_CMCRM_PRODUTO ID_PRODUTONavigation { get; set; } = null!;
 }

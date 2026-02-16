@@ -33,9 +33,9 @@ public partial class TB_CMCRM_ORIGEM_LEAD
 
     public virtual ICollection<TB_CMCRM_CHAT_TO_LEAD> TB_CMCRM_CHAT_TO_LEADs { get; set; } = new List<TB_CMCRM_CHAT_TO_LEAD>();
 
-    public virtual ICollection<TB_CMCRM_CONTum> TB_CMCRM_CONTa { get; set; } = new List<TB_CMCRM_CONTum>();
+    public virtual ICollection<TB_CMCRM_CONTA> TB_CMCRM_CONTa { get; set; } = new List<TB_CMCRM_CONTA>();
 
-    public virtual ICollection<TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDum> TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDa { get; set; } = new List<TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDum>();
+    public virtual ICollection<TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDA> TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDa { get; set; } = new List<TB_CMCRM_ESTRUTURA_COMISSAO_MODELO_VENDA>();
 
     public virtual ICollection<TB_CMCRM_FILA_ATENDIMENTO> TB_CMCRM_FILA_ATENDIMENTOs { get; set; } = new List<TB_CMCRM_FILA_ATENDIMENTO>();
 

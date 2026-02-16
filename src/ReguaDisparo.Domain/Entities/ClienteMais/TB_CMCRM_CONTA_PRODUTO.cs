@@ -39,13 +39,13 @@ public partial class TB_CMCRM_CONTA_PRODUTO
 
     public int? ID_ETAPA_JORNADA { get; set; }
 
-    public virtual TB_CMCRM_CONTum ID_CONTANavigation { get; set; } = null!;
+    public virtual TB_CMCRM_CONTA ID_CONTANavigation { get; set; } = null!;
 
-    public virtual TB_CMCRM_ETAPA_JORNADum? ID_ETAPA_JORNADANavigation { get; set; }
+    public virtual TB_CMCRM_ETAPA_JORNADA? ID_ETAPA_JORNADANavigation { get; set; }
 
     public virtual TB_CMCRM_PRODUTO ID_PRODUTONavigation { get; set; } = null!;
 
-    public virtual TB_CMCRM_PROPOSTum? ID_PROPOSTA_ACEITANavigation { get; set; }
+    public virtual TB_CMCRM_PROPOSTA? ID_PROPOSTA_ACEITANavigation { get; set; }
 
     public virtual ICollection<TB_CMCRM_CONTA_PRODUTO_DOCUMENTO> TB_CMCRM_CONTA_PRODUTO_DOCUMENTOs { get; set; } = new List<TB_CMCRM_CONTA_PRODUTO_DOCUMENTO>();
 
