@@ -75,7 +75,7 @@ public class ReguaCobrancaEtapaAcaoAgendamentoService : IReguaCobrancaEtapaAcaoA
             var agendamentos = await ListarPorEtapaAcaoAsync(idEtapaAcao, nomeBancoCrm);
             
             return agendamentos
-                .Where(x => !x.FL_ENVIADO)
+                .Where(x => !x.FL_ENVIADO && x.DT_ENVIO <= DateTime.Now)
                 .OrderBy(x => x.DT_ENVIO)
                 .ToList();
         }

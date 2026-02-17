@@ -27,6 +27,8 @@ public class ReguaCobrancaService : IReguaCobrancaService
     private readonly IUauIntegracaoService _uauIntegracaoService;
     private readonly IReguaCobrancaEtapaAcaoAgendamentoService _agendamentoService;
     private readonly IReguaCobrancaHistoricoEnvioService _historicoEnvioService;
+    private readonly IReguaCobrancaConfigService _reguaConfigService;
+    private readonly IReguaCobrancaEtapaService _reguaEtapaService;
     private readonly ILoggerFactory _loggerFactory;
 
     // Constantes do projeto antigo
@@ -46,6 +48,8 @@ public class ReguaCobrancaService : IReguaCobrancaService
         IUauIntegracaoService uauIntegracaoService,
         IReguaCobrancaEtapaAcaoAgendamentoService agendamentoService,
         IReguaCobrancaHistoricoEnvioService historicoEnvioService,
+        IReguaCobrancaConfigService reguaConfigService,
+        IReguaCobrancaEtapaService reguaEtapaService,
         ILoggerFactory loggerFactory)
     {
         _logger = logger;
@@ -60,6 +64,8 @@ public class ReguaCobrancaService : IReguaCobrancaService
         _uauIntegracaoService = uauIntegracaoService;
         _agendamentoService = agendamentoService;
         _historicoEnvioService = historicoEnvioService;
+        _reguaConfigService = reguaConfigService;
+        _reguaEtapaService = reguaEtapaService;
         _loggerFactory = loggerFactory;
     }
 
@@ -217,26 +223,26 @@ public class ReguaCobrancaService : IReguaCobrancaService
     {
         try
         {
-            _logger.LogDebug("Processando r�gua {IdRegua} - {NomeRegua}", 
+            _logger.LogDebug("Processando régua {IdRegua} - {NomeRegua}", 
                 regua.ID_CASO_COBRANCA_REGUA, regua.DS_NOME_REGUA);
 
             // Buscar configura��o da r�gua
-            var reguaConfig = await crmDb.TB_CMCRM_CASO_COBRANCA_REGUA_CONFIGs
-                .FirstOrDefaultAsync(c => c.ID_CASO_COBRANCA_REGUA == regua.ID_CASO_COBRANCA_REGUA, cancellationToken);
+            var reguaConfig = await _reguaConfigService.BuscarPorReguaAsync(
+                regua.ID_CASO_COBRANCA_REGUA, 
+                organizacao.NOME_BANCO_CRM!);
 
             if (reguaConfig == null)
             {
-                _logger.LogWarning("Configura��o n�o encontrada para r�gua {IdRegua}", regua.ID_CASO_COBRANCA_REGUA);
+                _logger.LogWarning("Configuração não encontrada para régua {IdRegua}", regua.ID_CASO_COBRANCA_REGUA);
                 return;
             }
 
-            // Buscar etapas da r�gua
-            var listaEtapas = await crmDb.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPAs
-                .Where(e => e.ID_CASO_COBRANCA_REGUA == regua.ID_CASO_COBRANCA_REGUA)
-                .OrderBy(e => e.NR_ETAPA)
-                .ToListAsync(cancellationToken);
+            // Buscar etapas da régua
+            var listaEtapas = await _reguaEtapaService.ListarPorReguaAsync(
+                regua.ID_CASO_COBRANCA_REGUA, 
+                organizacao.NOME_BANCO_CRM!);
 
-            _logger.LogInformation("R�gua {NomeRegua} possui {Count} etapas", regua.DS_NOME_REGUA, listaEtapas.Count);
+            _logger.LogInformation("Régua {NomeRegua} possui {Count} etapas", regua.DS_NOME_REGUA, listaEtapas.Count);
 
             foreach (var etapa in listaEtapas)
             {
@@ -295,7 +301,6 @@ public class ReguaCobrancaService : IReguaCobrancaService
 
                 try
                 {
-                    // Verificar se é ação agendada usando o campo FL_ACAO_AGENDADA
                     int qtdeEnvioNoDia = 0;
                     bool existeAgendamento = true;
                     
@@ -305,10 +310,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
                         var agendamentos = await _agendamentoService.ObterAgendamentosPendentesAsync(
                             acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO, 
                             organizacao.NOME_BANCO_CRM!);
-                        
-                        // Filtra apenas os que chegou a hora de executar
-                        agendamentos = agendamentos.Where(a => a.DT_ENVIO <= DateTime.Now).ToList();
-                        
+                                              
                         foreach (var agendamento in agendamentos)
                         {
                             existeAgendamento = true;

@@ -14,15 +14,21 @@ public class ComunicacaoService : IComunicacaoService
     private readonly ILogger<ComunicacaoService> _logger;
     private readonly IEmailService _emailService;
     private readonly ITenantDbContextFactory _tenantFactory;
+    private readonly IReguaCobrancaHistoricoEnvioService _historicoEnvioService;
+    private readonly IReguaCobrancaHistoricoNaoEnvioService _historicoNaoEnvioService;
 
     public ComunicacaoService(
         ILogger<ComunicacaoService> logger,
         IEmailService emailService,
-        ITenantDbContextFactory tenantFactory)
+        ITenantDbContextFactory tenantFactory,
+        IReguaCobrancaHistoricoEnvioService historicoEnvioService,
+        IReguaCobrancaHistoricoNaoEnvioService historicoNaoEnvioService)
     {
         _logger = logger;
         _emailService = emailService;
         _tenantFactory = tenantFactory;
+        _historicoEnvioService = historicoEnvioService;
+        _historicoNaoEnvioService = historicoNaoEnvioService;
     }
 
     public async Task EnviarEmailsAsync(
@@ -128,8 +134,6 @@ public class ComunicacaoService : IComunicacaoService
     {
         try
         {
-            using var crmDb = await _tenantFactory.CreateDbContextAsync(nomeBancoCrm);
-
             var historico = new TB_CMCRM_CASO_COBRANCA_REGUA_HISTORICO_ENVIO
             {
                 ID_CASO_COBRANCA_REGUA_ETAPA_ACAO = idAcao,
@@ -140,8 +144,7 @@ public class ComunicacaoService : IComunicacaoService
                 DT_ENVIO = DateTime.Now
             };
 
-            await crmDb.TB_CMCRM_CASO_COBRANCA_REGUA_HISTORICO_ENVIOs.AddAsync(historico);
-            await crmDb.SaveChangesAsync();
+            await _historicoEnvioService.AdicionarAsync(historico, nomeBancoCrm);
 
             _logger.LogDebug("Histórico de envio registrado para {Destinatario}", destinatario);
         }
@@ -161,8 +164,6 @@ public class ComunicacaoService : IComunicacaoService
     {
         try
         {
-            using var crmDb = await _tenantFactory.CreateDbContextAsync(nomeBancoCrm);
-
             var falha = new TB_CMCRM_CASO_COBRANCA_REGUA_HISTORICO_NAO_ENVIO
             {
                 ID_CASO_COBRANCA_REGUA_ETAPA_ACAO = idAcao,
@@ -172,8 +173,7 @@ public class ComunicacaoService : IComunicacaoService
                 DT_ENVIO = DateTime.Now
             };
 
-            await crmDb.TB_CMCRM_CASO_COBRANCA_REGUA_HISTORICO_NAO_ENVIOs.AddAsync(falha);
-            await crmDb.SaveChangesAsync();
+            await _historicoNaoEnvioService.RegistrarFalhaAsync(falha, nomeBancoCrm);
 
             _logger.LogDebug("Falha de envio registrada para {Destinatario}", destinatario);
         }
