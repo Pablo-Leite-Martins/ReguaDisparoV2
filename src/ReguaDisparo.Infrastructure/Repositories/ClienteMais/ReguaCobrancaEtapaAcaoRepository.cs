@@ -22,19 +22,19 @@ public class ReguaCobrancaEtapaAcaoRepository : IReguaCobrancaEtapaAcaoRepositor
     {
         try
         {
-            _logger.LogDebug("Listando todas as ações de etapa de régua");
+            _logger.LogDebug("Listando todas as aï¿½ï¿½es de etapa de rï¿½gua");
 
             var lista = await _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs
                 .AsNoTracking()
                 .ToListAsync();
 
-            _logger.LogInformation("Listadas {Count} ações de etapa de régua", lista.Count);
+            _logger.LogInformation("Listadas {Count} aï¿½ï¿½es de etapa de rï¿½gua", lista.Count);
 
             return lista;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao listar ações de etapa de régua");
+            _logger.LogError(ex, "Erro ao listar aï¿½ï¿½es de etapa de rï¿½gua");
             throw;
         }
     }
@@ -43,20 +43,21 @@ public class ReguaCobrancaEtapaAcaoRepository : IReguaCobrancaEtapaAcaoRepositor
     {
         try
         {
-            _logger.LogDebug("Listando ações por etapa {IdReguaEtapa}", idReguaEtapa);
+            _logger.LogDebug("Listando aï¿½ï¿½es por etapa {IdReguaEtapa}", idReguaEtapa);
 
             var lista = await _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs
+                .Include(a => a.ID_TIPO_ACAONavigation)
                 .Where(a => a.ID_CASO_COBRANCA_REGUA_ETAPA == idReguaEtapa)
                 .AsNoTracking()
                 .ToListAsync();
 
-            _logger.LogInformation("Listadas {Count} ações para a etapa {IdReguaEtapa}", lista.Count, idReguaEtapa);
+            _logger.LogInformation("Listadas {Count} aï¿½ï¿½es para a etapa {IdReguaEtapa}", lista.Count, idReguaEtapa);
 
             return lista;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao listar ações por etapa {IdReguaEtapa}", idReguaEtapa);
+            _logger.LogError(ex, "Erro ao listar aï¿½ï¿½es por etapa {IdReguaEtapa}", idReguaEtapa);
             throw;
         }
     }
@@ -65,20 +66,20 @@ public class ReguaCobrancaEtapaAcaoRepository : IReguaCobrancaEtapaAcaoRepositor
     {
         try
         {
-            _logger.LogDebug("Listando ações por tipo {IdTipoAcao}", idTipoAcao);
+            _logger.LogDebug("Listando aï¿½ï¿½es por tipo {IdTipoAcao}", idTipoAcao);
 
             var lista = await _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs
                 .Where(a => a.ID_TIPO_ACAO == idTipoAcao)
                 .AsNoTracking()
                 .ToListAsync();
 
-            _logger.LogInformation("Listadas {Count} ações do tipo {IdTipoAcao}", lista.Count, idTipoAcao);
+            _logger.LogInformation("Listadas {Count} aï¿½ï¿½es do tipo {IdTipoAcao}", lista.Count, idTipoAcao);
 
             return lista;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao listar ações por tipo {IdTipoAcao}", idTipoAcao);
+            _logger.LogError(ex, "Erro ao listar aï¿½ï¿½es por tipo {IdTipoAcao}", idTipoAcao);
             throw;
         }
     }
@@ -87,7 +88,7 @@ public class ReguaCobrancaEtapaAcaoRepository : IReguaCobrancaEtapaAcaoRepositor
     {
         try
         {
-            _logger.LogDebug("Buscando ação {IdAcao}", idAcao);
+            _logger.LogDebug("Buscando aï¿½ï¿½o {IdAcao}", idAcao);
 
             var acao = await _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs
                 .AsNoTracking()
@@ -95,14 +96,14 @@ public class ReguaCobrancaEtapaAcaoRepository : IReguaCobrancaEtapaAcaoRepositor
 
             if (acao == null)
             {
-                _logger.LogWarning("Ação {IdAcao} não encontrada", idAcao);
+                _logger.LogWarning("Aï¿½ï¿½o {IdAcao} nï¿½o encontrada", idAcao);
             }
 
             return acao;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao buscar ação {IdAcao}", idAcao);
+            _logger.LogError(ex, "Erro ao buscar aï¿½ï¿½o {IdAcao}", idAcao);
             throw;
         }
     }
@@ -111,16 +112,16 @@ public class ReguaCobrancaEtapaAcaoRepository : IReguaCobrancaEtapaAcaoRepositor
     {
         try
         {
-            _logger.LogDebug("Inserindo ação de etapa de régua");
+            _logger.LogDebug("Inserindo aï¿½ï¿½o de etapa de rï¿½gua");
 
             _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs.Add(entidade);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Ação {IdAcao} inserida com sucesso", entidade.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+            _logger.LogInformation("Aï¿½ï¿½o {IdAcao} inserida com sucesso", entidade.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao inserir ação de etapa de régua");
+            _logger.LogError(ex, "Erro ao inserir aï¿½ï¿½o de etapa de rï¿½gua");
             throw;
         }
     }
@@ -129,16 +130,16 @@ public class ReguaCobrancaEtapaAcaoRepository : IReguaCobrancaEtapaAcaoRepositor
     {
         try
         {
-            _logger.LogDebug("Atualizando ação {IdAcao}", entidade.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+            _logger.LogDebug("Atualizando aï¿½ï¿½o {IdAcao}", entidade.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
 
             _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs.Update(entidade);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Ação {IdAcao} atualizada com sucesso", entidade.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+            _logger.LogInformation("Aï¿½ï¿½o {IdAcao} atualizada com sucesso", entidade.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao atualizar ação {IdAcao}", entidade.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+            _logger.LogError(ex, "Erro ao atualizar aï¿½ï¿½o {IdAcao}", entidade.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
             throw;
         }
     }
@@ -147,7 +148,7 @@ public class ReguaCobrancaEtapaAcaoRepository : IReguaCobrancaEtapaAcaoRepositor
     {
         try
         {
-            _logger.LogDebug("Excluindo ação {IdAcao}", idAcao);
+            _logger.LogDebug("Excluindo aï¿½ï¿½o {IdAcao}", idAcao);
 
             var acao = await _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs
                 .FirstOrDefaultAsync(a => a.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO == idAcao);
@@ -157,16 +158,16 @@ public class ReguaCobrancaEtapaAcaoRepository : IReguaCobrancaEtapaAcaoRepositor
                 _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs.Remove(acao);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Ação {IdAcao} excluída com sucesso", idAcao);
+                _logger.LogInformation("Aï¿½ï¿½o {IdAcao} excluï¿½da com sucesso", idAcao);
             }
             else
             {
-                _logger.LogWarning("Ação {IdAcao} não encontrada para exclusão", idAcao);
+                _logger.LogWarning("Aï¿½ï¿½o {IdAcao} nï¿½o encontrada para exclusï¿½o", idAcao);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao excluir ação {IdAcao}", idAcao);
+            _logger.LogError(ex, "Erro ao excluir aï¿½ï¿½o {IdAcao}", idAcao);
             throw;
         }
     }

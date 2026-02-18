@@ -1,5 +1,7 @@
+using System.Data;
 using Microsoft.Extensions.Logging;
 using ReguaDisparo.Core.Interfaces;
+using ReguaDisparo.Domain.Entities.ClienteMais;
 using ReguaDisparo.Domain.Interfaces.Repositories.ClienteMais;
 using ReguaDisparo.Infrastructure.Data.Factories;
 using ReguaDisparo.Infrastructure.Repositories.ClienteMais;
@@ -9,6 +11,7 @@ namespace ReguaDisparo.Core.Services;
 /// <summary>
 /// Serviço de mensageria - busca base de dados conforme tipo de ação
 /// Usa stored procedures para performance em queries complexas
+/// Implementa cache de dados para evitar múltiplas buscas
 /// </summary>
 public class MensageriaService : IMensageriaService
 {
@@ -16,9 +19,13 @@ public class MensageriaService : IMensageriaService
     private readonly ILoggerFactory _loggerFactory;
     private readonly ILogger<MensageriaService> _logger;
 
-    // Cache de dados para evitar múltiplas buscas no mesmo processamento
-    private Dictionary<string, (DateTime timestamp, object data)> _cache = new();
-    private readonly TimeSpan _cacheTimeout = TimeSpan.FromMinutes(5);
+    // Cache de dados (replicando lógica do projeto antigo com blnFirstExec)
+    private static bool _blnFirstExec = false;
+    private static DataTable? _dtDadosCobranca = null;
+    private static DataTable? _dtDadosCobrancaParcelas = null;
+    private static DataTable? _dtDadosCobrancaPreventiva = null;
+    private static DateTime _ultimaExecucao = DateTime.MinValue;
+    private static readonly object _lockObj = new object();
 
     public MensageriaService(
         ITenantDbContextFactory tenantFactory,
@@ -30,50 +37,40 @@ public class MensageriaService : IMensageriaService
         _logger = logger;
     }
 
-    public async Task<List<DestinatarioMensageria>> BuscarBaseMensageriaAsync(
-        string tipoAcao,
-        string? descricaoAcao,
+    public async Task<DataTable> BuscarBaseMensageriaAsync(
+        TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO acao,
         bool cobrancaPreventiva,
-        string nomeBancoCrm,
-        string idOrganizacao)
+        string nomeBancoCrm)
     {
         try
         {
+            var dsTipoAcao = acao.ID_TIPO_ACAONavigation?.DS_TIPO_ACAO ?? "";
+            
             _logger.LogInformation("Buscando base mensageria - Tipo: {Tipo}, Descrição: {Descricao}, Preventiva: {Preventiva}", 
-                tipoAcao, descricaoAcao, cobrancaPreventiva);
+                dsTipoAcao, acao.DS_NOME_ACAO, cobrancaPreventiva);
 
             using var crmDb = await _tenantFactory.CreateDbContextAsync(nomeBancoCrm);
             var proceduresRepo = new ClienteMaisStoredProceduresRepository(
                 crmDb,
                 _loggerFactory.CreateLogger<ClienteMaisStoredProceduresRepository>());
 
-            var descricaoUpper = descricaoAcao?.ToUpper() ?? "";
-
             // Roteamento baseado no tipo e descrição da ação
-            if (descricaoUpper.Contains("PÓS OCUPACIONAL") || descricaoUpper.Contains("POS OCUPACIONAL"))
+            if (dsTipoAcao.Contains("PÓS OCUPACIONAL") || dsTipoAcao.Contains("POS OCUPACIONAL"))
             {
                 return await BuscarBasePosOcupacionalAsync(proceduresRepo);
             }
-            else if (descricaoUpper.Contains("EMAIL ANIVERSARIO") || descricaoUpper.Contains("ANIVERSÁRIO"))
+            else if (dsTipoAcao.Contains("EMAIL ANIVERSARIO") || dsTipoAcao.Contains("ANIVERSÁRIO"))
             {
                 return await BuscarBaseRelacionamentoAsync(proceduresRepo, apenasAniversariantes: true);
             }
-            else if (descricaoUpper.Contains("RELACIONAMENTO COM CLIENTE"))
+            else if (dsTipoAcao.Contains("RELACIONAMENTO COM CLIENTE"))
             {
                 return await BuscarBaseRelacionamentoAsync(proceduresRepo, apenasAniversariantes: false);
             }
-            else if (tipoAcao.ToUpper().Contains("EMAIL") || tipoAcao.ToUpper().Contains("SMS") || tipoAcao.ToUpper().Contains("WHATSAPP"))
-            {
-                // Mensageria de cobrança (principal)
-                return await BuscarBaseCobrancaAsync(
-                    proceduresRepo, 
-                    cobrancaPreventiva, 
-                    idOrganizacao);
-            }
             else
             {
-                _logger.LogWarning("Tipo de ação não reconhecido para mensageria: {TipoAcao}", tipoAcao);
-                return new List<DestinatarioMensageria>();
+                // Mensageria de cobrança (principal) - implementa cache como no projeto antigo
+                return await BuscarBaseCobrancaAsync(proceduresRepo, cobrancaPreventiva);
             }
         }
         catch (Exception ex)
@@ -83,124 +80,103 @@ public class MensageriaService : IMensageriaService
         }
     }
 
-    private async Task<List<DestinatarioMensageria>> BuscarBaseCobrancaAsync(
+    private async Task<DataTable> BuscarBaseCobrancaAsync(
         IClienteMaisStoredProceduresRepository proceduresRepo,
-        bool cobrancaPreventiva,
-        string idOrganizacao)
+        bool cobrancaPreventiva)
     {
         var dataInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-        var incluirTodasEmpresas = idOrganizacao == "COLORADO"; // Regra específica Colorado
 
-        if (cobrancaPreventiva)
+        // Implementa lógica de cache como no projeto antigo
+        lock (_lockObj)
         {
-            // Cobrança preventiva (títulos a vencer)
-            _logger.LogDebug("Buscando base de cobrança preventiva");
-            var baseAReceber = await proceduresRepo.BuscarBaseMensageriaAReceberAsync(dataInicio, incluirTodasEmpresas);
-            
-            return baseAReceber.Select(b => new DestinatarioMensageria
+            // Verifica se precisa recarregar (nova data ou primeira execução)
+            if (!_blnFirstExec || _ultimaExecucao.Date != DateTime.Now.Date)
             {
-                IdEmpresa = b.ID_EMPRESA,
-                IdObra = b.ID_OBRA,
-                IdVenda = b.ID_VENDA,
-                Cliente = b.DS_CLIENTE,
-                Email = b.DS_EMAIL,
-                DDD = b.COD_DDD,
-                Telefone = b.NR_TELEFONE,
-                Produto = b.DS_PRODUTO,
-                DataVencimento = b.DT_VENCIMENTO_PROXIMO,
-                ValorParcela = b.VL_PROXIMO_VENCIMENTO,
-                DiasAteVencimento = b.DIAS_ATE_VENCIMENTO
-            }).ToList();
+                _blnFirstExec = false;
+                _dtDadosCobranca = null;
+                _dtDadosCobrancaParcelas = null;
+                _dtDadosCobrancaPreventiva = null;
+                _ultimaExecucao = DateTime.Now;
+            }
         }
-        else
+
+        if (!_blnFirstExec)
         {
-            // Cobrança normal (títulos vencidos)
-            _logger.LogDebug("Buscando base de cobrança (vencidos)");
+            _logger.LogInformation("Primeira execução ou nova data - carregando dados de mensageria");
             
-            // Busca base de cobrança principal
-            var baseCobranca = await proceduresRepo.BuscarBaseMensageriaCobrancaAsync(dataInicio);
+            // Busca base de cobrança
+            _dtDadosCobranca = await proceduresRepo.BuscarBaseMensageriaCobrancaAsync(dataInicio);
+            _logger.LogDebug("Base cobrança carregada: {Count} registros", _dtDadosCobranca.Rows.Count);
             
-            // Busca base de parcelas para complementar informações
-            List<BaseMensageriaParcelas>? baseParcelas = null;
+            // Busca base de parcelas
             try
             {
-                baseParcelas = await proceduresRepo.BuscarBaseMensageriaParcelasAsync(dataInicio, incluirTodasEmpresas);
+                _dtDadosCobrancaParcelas = await proceduresRepo.BuscarBaseMensageriaParcelasAsync(dataInicio);
+                _logger.LogDebug("Base parcelas carregada: {Count} registros", _dtDadosCobrancaParcelas.Rows.Count);
             }
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, "Erro ao buscar base de parcelas, continuando sem ela");
+                _dtDadosCobrancaParcelas = null;
             }
-
-            return baseCobranca.Select(b => new DestinatarioMensageria
-            {
-                IdEmpresa = b.ID_EMPRESA,
-                IdObra = b.ID_OBRA,
-                IdVenda = b.ID_VENDA,
-                Cliente = b.DS_CLIENTE,
-                Email = b.DS_EMAIL,
-                DDD = b.COD_DDD,
-                Telefone = b.NR_TELEFONE,
-                Produto = b.DS_PRODUTO,
-                ChaveErp = b.ID_CHAVE_ERP,
-                Identificador = b.DS_IDENTIFICADOR,
-                ClassificacaoContrato = b.DS_CLASSIFICACAO_CONTRATO,
-                AgingDias = b.NR_AGING_DIAS_CONTRATO,
-                ValorVencido = b.VL_TOTAL_VENCIDO,
-                ValorAVencer = b.VL_TOTAL_A_VENCER,
-                DataVencimento = b.DT_VENCIMENTO_MAIS_ANTIGO,
-                QuantidadeParcelasVencidas = b.QT_PARCELAS_VENCIDAS
-            }).ToList();
+            
+            // Busca base preventiva
+            _dtDadosCobrancaPreventiva = await proceduresRepo.BuscarBaseMensageriaAReceberAsync(dataInicio);
+            _logger.LogDebug("Base preventiva carregada: {Count} registros", _dtDadosCobrancaPreventiva.Rows.Count);
+            
+            _blnFirstExec = true;
         }
+        else
+        {
+            _logger.LogDebug("Usando dados em cache de mensageria");
+        }
+
+        // Retorna cópia dos dados conforme tipo de cobrança
+        DataTable dtDados;
+        if (!cobrancaPreventiva)
+        {
+            dtDados = _dtDadosCobranca!.Copy();
+            _logger.LogInformation("Retornando base de cobrança: {Count} registros", dtDados.Rows.Count);
+        }
+        else
+        {
+            dtDados = _dtDadosCobrancaPreventiva!.Copy();
+            _logger.LogInformation("Retornando base preventiva: {Count} registros", dtDados.Rows.Count);
+        }
+
+        return dtDados;
     }
 
-    private async Task<List<DestinatarioMensageria>> BuscarBasePosOcupacionalAsync(
+    private async Task<DataTable> BuscarBasePosOcupacionalAsync(
         IClienteMaisStoredProceduresRepository proceduresRepo)
     {
         _logger.LogDebug("Buscando base pós-ocupacional");
-        
-        var basePosOcupacional = await proceduresRepo.BuscarBaseMensageriaPosOcupacionalAsync();
-        
-        return basePosOcupacional.Select(b => new DestinatarioMensageria
-        {
-            IdEmpresa = b.ID_EMPRESA,
-            IdObra = b.ID_OBRA,
-            IdVenda = b.ID_VENDA,
-            Cliente = b.DS_CLIENTE,
-            Email = b.DS_EMAIL,
-            DDD = b.COD_DDD,
-            Telefone = b.NR_TELEFONE,
-            DataEntregaChaves = b.DT_ENTREGA_CHAVES
-        }).ToList();
+        var dtDados = await proceduresRepo.BuscarBaseMensageriaPosOcupacionalAsync();
+        _logger.LogInformation("Base pós-ocupacional retornou {Count} registros", dtDados.Rows.Count);
+        return dtDados;
     }
 
-    private async Task<List<DestinatarioMensageria>> BuscarBaseRelacionamentoAsync(
+    private async Task<DataTable> BuscarBaseRelacionamentoAsync(
         IClienteMaisStoredProceduresRepository proceduresRepo,
         bool apenasAniversariantes)
     {
         _logger.LogDebug("Buscando base de relacionamento (aniversariantes: {Flag})", apenasAniversariantes);
-        
-        var baseRelacionamento = await proceduresRepo.BuscarBaseMensageriaRelacionamentoAsync(apenasAniversariantes);
-        
-        return baseRelacionamento.Select(b => new DestinatarioMensageria
-        {
-            IdEmpresa = b.ID_EMPRESA,
-            IdObra = b.ID_OBRA,
-            IdVenda = b.ID_VENDA,
-            Cliente = b.DS_CLIENTE,
-            Email = b.DS_EMAIL,
-            DDD = b.COD_DDD,
-            Telefone = b.NR_TELEFONE,
-            DataNascimento = b.DT_NASCIMENTO,
-            Aniversariante = b.FL_ANIVERSARIANTE_MES
-        }).ToList();
+        var dtDados = await proceduresRepo.BuscarBaseMensageriaRelacionamentoAsync(apenasAniversariantes);
+        _logger.LogInformation("Base relacionamento retornou {Count} registros", dtDados.Rows.Count);
+        return dtDados;
     }
 
     /// <summary>
-    /// Limpa cache de dados
+    /// Limpa cache de dados - útil para forçar recarga
     /// </summary>
-    public void LimparCache()
+    public static void LimparCache()
     {
-        _cache.Clear();
-        _logger.LogDebug("Cache de mensageria limpo");
+        lock (_lockObj)
+        {
+            _blnFirstExec = false;
+            _dtDadosCobranca = null;
+            _dtDadosCobrancaParcelas = null;
+            _dtDadosCobrancaPreventiva = null;
+        }
     }
 }

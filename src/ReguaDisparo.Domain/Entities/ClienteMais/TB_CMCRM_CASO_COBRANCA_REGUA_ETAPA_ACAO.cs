@@ -43,6 +43,8 @@ public partial class TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO
 
     public virtual TB_CMCRM_FORMULARIO? ID_FORMULARIONavigation { get; set; }
 
+    public virtual TB_CMCRM_CASO_COBRANCA_REGUA_TIPO_ACAO? ID_TIPO_ACAONavigation { get; set; }
+
     public virtual ICollection<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA> TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDa { get; set; } = new List<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA>();
 
     public virtual ICollection<TB_CMCRM_EMAIL_REGUA_PESQUISA> TB_CMCRM_EMAIL_REGUA_PESQUISAs { get; set; } = new List<TB_CMCRM_EMAIL_REGUA_PESQUISA>();

@@ -29,6 +29,9 @@ public class ReguaCobrancaService : IReguaCobrancaService
     private readonly IReguaCobrancaHistoricoEnvioService _historicoEnvioService;
     private readonly IReguaCobrancaConfigService _reguaConfigService;
     private readonly IReguaCobrancaEtapaService _reguaEtapaService;
+    private readonly IReguaCobrancaEtapaAcaoService _reguaEtapaAcaoService;
+    private readonly IReguaCobrancaEtapaAcaoFiltroService _filtroService;
+    private readonly IMensageriaService _mensageriaService;
     private readonly ILoggerFactory _loggerFactory;
 
     // Constantes do projeto antigo
@@ -50,6 +53,9 @@ public class ReguaCobrancaService : IReguaCobrancaService
         IReguaCobrancaHistoricoEnvioService historicoEnvioService,
         IReguaCobrancaConfigService reguaConfigService,
         IReguaCobrancaEtapaService reguaEtapaService,
+        IReguaCobrancaEtapaAcaoService reguaEtapaAcaoService,
+        IReguaCobrancaEtapaAcaoFiltroService filtroService,
+        IMensageriaService mensageriaService,
         ILoggerFactory loggerFactory)
     {
         _logger = logger;
@@ -66,6 +72,9 @@ public class ReguaCobrancaService : IReguaCobrancaService
         _historicoEnvioService = historicoEnvioService;
         _reguaConfigService = reguaConfigService;
         _reguaEtapaService = reguaEtapaService;
+        _reguaEtapaAcaoService = reguaEtapaAcaoService;
+        _filtroService = filtroService;
+        _mensageriaService = mensageriaService;
         _loggerFactory = loggerFactory;
     }
 
@@ -251,9 +260,10 @@ public class ReguaCobrancaService : IReguaCobrancaService
 
                 try
                 {
-                    // Buscar a��es da etapa
-                    var acaoRepo = new ReguaCobrancaEtapaAcaoRepository(crmDb, _loggerFactory.CreateLogger<ReguaCobrancaEtapaAcaoRepository>());
-                    var listaAcoes = await acaoRepo.ListarPorReguaEtapaAsync(etapa.ID_CASO_COBRANCA_REGUA_ETAPA);
+                    // Buscar ações da etapa usando service
+                    var listaAcoes = await _reguaEtapaAcaoService.ListarPorReguaEtapaAsync(
+                        etapa.ID_CASO_COBRANCA_REGUA_ETAPA,
+                        organizacao.NOME_BANCO_CRM!);
 
                     if (listaAcoes.Any())
                     {
@@ -355,25 +365,57 @@ public class ReguaCobrancaService : IReguaCobrancaService
         ClienteMaisDbContext crmDb,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Processando ação {IdAcao} - {NomeAcao} - Tipo ID: {TipoAcaoId}", 
-            acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO, acao.DS_NOME_ACAO, acao.ID_TIPO_ACAO);
+        try
+        {
+            _logger.LogInformation("Processando ação {IdAcao} - {NomeAcao} - Tipo ID: {TipoAcaoId}", 
+                acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO, acao.DS_NOME_ACAO, acao.ID_TIPO_ACAO);
 
-        // TODO: Buscar dados base conforme tipo de ação
-        // Por enquanto, vamos implementar a estrutura básica
-        
-        // Buscar filtros configurados
-        var filtroRepo = new ReguaCobrancaEtapaAcaoFiltroRepository(
-            crmDb,
-            _loggerFactory.CreateLogger<ReguaCobrancaEtapaAcaoFiltroRepository>());
-        
-        var listaFiltros = await filtroRepo.ListarPorAcaoAsync(acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+            // Buscar filtros configurados para esta ação usando service
+            var listaFiltros = await _filtroService.ListarPorAcaoAsync(
+                acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO,
+                organizacao.NOME_BANCO_CRM!);
 
-        // TODO: Implementar busca de dados base (ver ListaBaseMensageria, etc do projeto antigo)
-        // TODO: Aplicar filtros aos dados
-        // TODO: Aplicar ordenação se necessário
-        // TODO: Verificar validação da régua
-        // TODO: Executar ação final (envio)
+            // Obter tipo de ação da navigation property (Include feito no repository)
+            string tipoAcao = acao.ID_TIPO_ACAONavigation?.DS_TIPO_ACAO!;
 
-        _logger.LogInformation("Ação {IdAcao} processada com sucesso", acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+            // Buscar base de dados para mensageria conforme tipo de ação
+            // Retorna DataTable para compatibilidade com lógica original
+            var dtDados = await _mensageriaService.BuscarBaseMensageriaAsync(
+                acao,
+                cobrancaPreventiva: reguaEtapa.FL_COBRANCA_PREVENTIVA ?? false,
+                nomeBancoCrm: organizacao.NOME_BANCO_CRM!);
+
+            if (dtDados == null || dtDados.Rows.Count == 0)
+            {
+                _logger.LogInformation("Nenhum destinatário encontrado para ação {IdAcao}", acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+                return;
+            }
+
+            dtDados = _filtroService.AplicarFiltros(dtDados, listaFiltros);
+            _logger.LogInformation("Após filtros: {Count} destinatários", dtDados.Rows.Count);
+            if (dtDados is not null || dtDados?.Rows.Count == 0)
+            {
+                _logger.LogInformation("Nenhum destinatário restante após aplicação de filtros para ação {IdAcao}", 
+                    acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+                return;
+            }
+            _logger.LogInformation("Etapa: {Etapa}, Ação: {Acao}, Tipo: {Tipo} ({Count} disparos)",
+                reguaEtapa.DS_NOME_ETAPA,
+                acao.DS_NOME_ACAO,
+                tipoAcao,
+                dtDados.Rows.Count);
+
+            // TODO: Aplicar ordenação se tipo = DISTRIBUIÇÃO
+            // TODO: Verificar validação da régua (modo teste, limites, etc)
+            // TODO: Executar ação final (envio de email/sms/whatsapp)
+
+            _logger.LogInformation("Ação {IdAcao} processada: {Count} destinatários encontrados", 
+                acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO, dtDados.Rows.Count);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao processar ação {IdAcao}", acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+            throw;
+        }
     }
 }

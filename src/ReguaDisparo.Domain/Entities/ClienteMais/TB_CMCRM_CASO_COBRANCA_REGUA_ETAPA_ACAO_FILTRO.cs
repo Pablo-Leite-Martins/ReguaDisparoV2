@@ -14,4 +14,6 @@ public partial class TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_FILTRO
     public string DS_OPERACAO { get; set; } = null!;
 
     public int ID_CASO_COBRANCA_REGUA_ETAPA_ACAO { get; set; }
+
+    public virtual TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_TIPO_FILTRO? ID_CASO_COBRANCA_REGUA_ETAPA_ACAO_TIPO_FILTRONavigation { get; set; }
 }

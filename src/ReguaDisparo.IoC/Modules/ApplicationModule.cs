@@ -58,6 +58,8 @@ namespace ReguaDisparo.IoC
             services.AddScoped<IReguaCobrancaService, ReguaCobrancaService>();
             services.AddScoped<IReguaCobrancaConfigService, ReguaCobrancaConfigService>();
             services.AddScoped<IReguaCobrancaEtapaService, ReguaCobrancaEtapaService>();
+            services.AddScoped<IReguaCobrancaEtapaAcaoService, ReguaCobrancaEtapaAcaoService>();
+            services.AddScoped<IReguaCobrancaEtapaAcaoFiltroService, ReguaCobrancaEtapaAcaoFiltroService>();
             services.AddScoped<IReguaCobrancaEtapaAcaoAgendamentoService, ReguaCobrancaEtapaAcaoAgendamentoService>();
             services.AddScoped<IReguaCobrancaHistoricoEnvioService, ReguaCobrancaHistoricoEnvioService>();
             services.AddScoped<IReguaCobrancaHistoricoNaoEnvioService, ReguaCobrancaHistoricoNaoEnvioService>();

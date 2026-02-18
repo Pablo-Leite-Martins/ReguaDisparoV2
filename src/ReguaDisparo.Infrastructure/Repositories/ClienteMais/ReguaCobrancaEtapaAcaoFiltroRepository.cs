@@ -28,6 +28,7 @@ public class ReguaCobrancaEtapaAcaoFiltroRepository : IReguaCobrancaEtapaAcaoFil
     public async Task<List<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_FILTRO>> ListarPorAcaoAsync(int idAcao)
     {
         return await _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_FILTROs
+            .Include(f => f.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO_TIPO_FILTRONavigation)
             .AsNoTracking()
             .Where(x => x.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO == idAcao)
             .ToListAsync();

@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ namespace ReguaDisparo.Infrastructure.Repositories.ClienteMais;
 
 /// <summary>
 /// Repositório de stored procedures do banco ClienteMais CRM
+/// Retorna DataTable para compatibilidade com lógica original
 /// NOTA: Procedures SQL precisam ser criadas no banco. 
 /// Implementação temporária usa queries diretas até procedures serem criadas.
 /// </summary>
@@ -23,14 +25,13 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
         _logger = logger;
     }
 
-    public async Task<List<BaseMensageriaCobranca>> BuscarBaseMensageriaCobrancaAsync(DateTime dataInicio)
+    public async Task<DataTable> BuscarBaseMensageriaCobrancaAsync(DateTime dataInicio)
     {
         try
         {
             _logger.LogDebug("Buscando base de mensageria de cobrança desde {DataInicio}", dataInicio);
 
             // TODO: Substituir por EXEC SP_CMCRM_SEL_BASE_MENSAGERIA_COBRANCA quando procedure existir
-            // Por ora, implementa query direta (será mais lento, mas funcional)
             
             var sql = @"
                 SELECT DISTINCT
@@ -48,7 +49,7 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
                     DATEDIFF(DAY, MIN(pc.DT_VENCIMENTO), GETDATE()) as NR_AGING_DIAS_CONTRATO,
                     SUM(CASE WHEN pc.DT_VENCIMENTO < GETDATE() THEN pc.VL_VALOR ELSE 0 END) as VL_TOTAL_VENCIDO,
                     SUM(CASE WHEN pc.DT_VENCIMENTO >= GETDATE() THEN pc.VL_VALOR ELSE 0 END) as VL_TOTAL_A_VENCER,
-                    MIN(pc.DT_VENCIMENTO) as DT_VENCIMENTO_MAIS_ANTIGO,
+                    MIN(pc.DT_VENCIMENTO) as DT_VENCIMENTO,
                     COUNT(CASE WHEN pc.DT_VENCIMENTO < GETDATE() AND pc.FL_LIQUIDADO = 0 THEN 1 END) as QT_PARCELAS_VENCIDAS
                 FROM TB_CMREC_CONTA c WITH(NOLOCK)
                 INNER JOIN TB_CMCAD_PESSOA p WITH(NOLOCK) ON c.ID_PESSOA = p.ID_PESSOA
@@ -65,12 +66,10 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
                 HAVING COUNT(CASE WHEN pc.DT_VENCIMENTO < GETDATE() AND pc.FL_LIQUIDADO = 0 THEN 1 END) > 0
                 ORDER BY NR_AGING_DIAS_CONTRATO DESC";
 
-            var result = await _context.Database
-                .SqlQueryRaw<BaseMensageriaCobranca>(sql)
-                .ToListAsync();
-
-            _logger.LogInformation("Base de mensageria de cobrança retornou {Count} registros", result.Count);
-            return result;
+            var dtResult = await ExecutarQueryAsync(sql);
+            
+            _logger.LogInformation("Base de mensageria de cobrança retornou {Count} registros", dtResult.Rows.Count);
+            return dtResult;
         }
         catch (Exception ex)
         {
@@ -79,7 +78,7 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
         }
     }
 
-    public async Task<List<BaseMensageriaParcelas>> BuscarBaseMensageriaParcelasAsync(DateTime dataInicio, bool incluirTodasEmpresas = false)
+    public async Task<DataTable> BuscarBaseMensageriaParcelasAsync(DateTime dataInicio)
     {
         try
         {
@@ -112,13 +111,10 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
                 ORDER BY pc.DT_VENCIMENTO, p.DS_NOME";
 
             var parameters = new[] { new SqlParameter("@dataInicio", dataInicio) };
+            var dtResult = await ExecutarQueryAsync(sql, parameters);
             
-            var result = await _context.Database
-                .SqlQueryRaw<BaseMensageriaParcelas>(sql, parameters)
-                .ToListAsync();
-
-            _logger.LogInformation("Base de mensageria de parcelas retornou {Count} registros", result.Count);
-            return result;
+            _logger.LogInformation("Base de mensageria de parcelas retornou {Count} registros", dtResult.Rows.Count);
+            return dtResult;
         }
         catch (Exception ex)
         {
@@ -127,7 +123,7 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
         }
     }
 
-    public async Task<List<BaseMensageriaAReceber>> BuscarBaseMensageriaAReceberAsync(DateTime dataInicio, bool incluirTodasEmpresas = false)
+    public async Task<DataTable> BuscarBaseMensageriaAReceberAsync(DateTime dataInicio)
     {
         try
         {
@@ -145,8 +141,8 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
                     p.COD_DDD,
                     p.NR_TELEFONE,
                     prod.DS_PRODUTO,
-                    MIN(pc.DT_VENCIMENTO) as DT_VENCIMENTO_PROXIMO,
-                    SUM(pc.VL_VALOR) as VL_PROXIMO_VENCIMENTO,
+                    MIN(pc.DT_VENCIMENTO) as DT_VENCIMENTO,
+                    SUM(pc.VL_VALOR) as VL_PARCELA,
                     DATEDIFF(DAY, GETDATE(), MIN(pc.DT_VENCIMENTO)) as DIAS_ATE_VENCIMENTO
                 FROM TB_CMREC_CONTA c WITH(NOLOCK)
                 INNER JOIN TB_CMCAD_PESSOA p WITH(NOLOCK) ON c.ID_PESSOA = p.ID_PESSOA
@@ -161,16 +157,13 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
                 GROUP BY 
                     c.ID_EMPRESA, c.ID_OBRA, c.ID_VENDA, p.DS_NOME, 
                     p.DS_EMAIL, p.COD_DDD, p.NR_TELEFONE, prod.DS_PRODUTO
-                ORDER BY DT_VENCIMENTO_PROXIMO";
+                ORDER BY DT_VENCIMENTO";
 
             var parameters = new[] { new SqlParameter("@dataInicio", dataInicio) };
+            var dtResult = await ExecutarQueryAsync(sql, parameters);
             
-            var result = await _context.Database
-                .SqlQueryRaw<BaseMensageriaAReceber>(sql, parameters)
-                .ToListAsync();
-
-            _logger.LogInformation("Base de mensageria a receber retornou {Count} registros", result.Count);
-            return result;
+            _logger.LogInformation("Base de mensageria a receber retornou {Count} registros", dtResult.Rows.Count);
+            return dtResult;
         }
         catch (Exception ex)
         {
@@ -179,7 +172,7 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
         }
     }
 
-    public async Task<List<BaseMensageriaPosOcupacional>> BuscarBaseMensageriaPosOcupacionalAsync()
+    public async Task<DataTable> BuscarBaseMensageriaPosOcupacionalAsync()
     {
         try
         {
@@ -207,12 +200,10 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
                     AND p.DS_EMAIL <> ''
                 ORDER BY v.DT_ENTREGA_CHAVES DESC";
 
-            var result = await _context.Database
-                .SqlQueryRaw<BaseMensageriaPosOcupacional>(sql)
-                .ToListAsync();
-
-            _logger.LogInformation("Base de mensageria pós-ocupacional retornou {Count} registros", result.Count);
-            return result;
+            var dtResult = await ExecutarQueryAsync(sql);
+            
+            _logger.LogInformation("Base de mensageria pós-ocupacional retornou {Count} registros", dtResult.Rows.Count);
+            return dtResult;
         }
         catch (Exception ex)
         {
@@ -221,7 +212,7 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
         }
     }
 
-    public async Task<List<BaseMensageriaRelacionamento>> BuscarBaseMensageriaRelacionamentoAsync(bool apenasAniversariantes)
+    public async Task<DataTable> BuscarBaseMensageriaRelacionamentoAsync(bool apenasAniversariantes)
     {
         try
         {
@@ -252,17 +243,55 @@ public class ClienteMaisStoredProceduresRepository : IClienteMaisStoredProcedure
                     " + (apenasAniversariantes ? "AND MONTH(p.DT_NASCIMENTO) = MONTH(GETDATE())" : "") + @"
                 ORDER BY MONTH(p.DT_NASCIMENTO), DAY(p.DT_NASCIMENTO)";
 
-            var result = await _context.Database
-                .SqlQueryRaw<BaseMensageriaRelacionamento>(sql)
-                .ToListAsync();
-
-            _logger.LogInformation("Base de mensageria de relacionamento retornou {Count} registros", result.Count);
-            return result;
+            var dtResult = await ExecutarQueryAsync(sql);
+            
+            _logger.LogInformation("Base de mensageria de relacionamento retornou {Count} registros", dtResult.Rows.Count);
+            return dtResult;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao buscar base de mensageria de relacionamento");
             throw;
+        }
+    }
+
+    /// <summary>
+    /// Método helper para executar query e retornar DataTable
+    /// </summary>
+    private async Task<DataTable> ExecutarQueryAsync(string sql, SqlParameter[]? parameters = null)
+    {
+        var dt = new DataTable();
+        
+        var connection = _context.Database.GetDbConnection();
+        var needsClose = connection.State != ConnectionState.Open;
+        
+        try
+        {
+            if (needsClose)
+            {
+                await connection.OpenAsync();
+            }
+
+            using var command = connection.CreateCommand();
+            command.CommandText = sql;
+            command.CommandTimeout = 300; // 5 minutos
+
+            if (parameters != null)
+            {
+                command.Parameters.AddRange(parameters);
+            }
+
+            using var reader = await command.ExecuteReaderAsync();
+            dt.Load(reader);
+            
+            return dt;
+        }
+        finally
+        {
+            if (needsClose && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
         }
     }
 }
