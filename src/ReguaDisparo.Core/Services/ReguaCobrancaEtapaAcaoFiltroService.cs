@@ -93,13 +93,13 @@ public class ReguaCobrancaEtapaAcaoFiltroService : IReguaCobrancaEtapaAcaoFiltro
             if (dtDados == null || dtDados.Rows.Count == 0)
             {
                 _logger.LogDebug("DataTable vazio ou nulo, nenhum filtro aplicado");
-                return dtDados;
+                return null!;
             }
 
             if (listaFiltros == null || listaFiltros.Count == 0)
             {
                 _logger.LogDebug("Nenhum filtro configurado");
-                return dtDados;
+                return null!;
             }
 
             _logger.LogInformation("Aplicando {Count} filtros ao DataTable com {Rows} registros", 
@@ -111,7 +111,7 @@ public class ReguaCobrancaEtapaAcaoFiltroService : IReguaCobrancaEtapaAcaoFiltro
                 {
                     _logger.LogWarning("Filtro {IdFiltro} sem navigation property carregada", 
                         filtro.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO_FILTRO);
-                    continue;
+                    return null!;
                 }
 
                 var tipoFiltro = filtro.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO_TIPO_FILTRONavigation.DS_CASO_COBRANCA_REGUA_ETAPA_ACAO_TIPO_FILTRO.ToUpper();
@@ -127,14 +127,14 @@ public class ReguaCobrancaEtapaAcaoFiltroService : IReguaCobrancaEtapaAcaoFiltro
                 if (string.IsNullOrEmpty(nomeCampo))
                 {
                     _logger.LogWarning("Tipo de filtro não mapeado: {Tipo}", tipoFiltro);
-                    return null;
+                    return null!;
                 }
 
                 // Verifica se a coluna existe no DataTable
                 if (!dtDados.Columns.Contains(nomeCampo))
                 {
                     _logger.LogWarning("Coluna {NomeCampo} não existe no DataTable", nomeCampo);
-                    return null;
+                    return null!;
                 }
 
                 // Aplica filtro conforme categoria

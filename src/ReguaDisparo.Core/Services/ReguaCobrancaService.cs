@@ -31,6 +31,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
     private readonly IReguaCobrancaEtapaService _reguaEtapaService;
     private readonly IReguaCobrancaEtapaAcaoService _reguaEtapaAcaoService;
     private readonly IReguaCobrancaEtapaAcaoFiltroService _filtroService;
+    private readonly IReguaCobrancaEtapaOrdenacaoService _ordenacaoService;
     private readonly IMensageriaService _mensageriaService;
     private readonly ILoggerFactory _loggerFactory;
 
@@ -55,6 +56,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
         IReguaCobrancaEtapaService reguaEtapaService,
         IReguaCobrancaEtapaAcaoService reguaEtapaAcaoService,
         IReguaCobrancaEtapaAcaoFiltroService filtroService,
+        IReguaCobrancaEtapaOrdenacaoService ordenacaoService,
         IMensageriaService mensageriaService,
         ILoggerFactory loggerFactory)
     {
@@ -74,6 +76,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
         _reguaEtapaService = reguaEtapaService;
         _reguaEtapaAcaoService = reguaEtapaAcaoService;
         _filtroService = filtroService;
+        _ordenacaoService = ordenacaoService;
         _mensageriaService = mensageriaService;
         _loggerFactory = loggerFactory;
     }
@@ -237,7 +240,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
 
             // Buscar configura��o da r�gua
             var reguaConfig = await _reguaConfigService.BuscarPorReguaAsync(
-                regua.ID_CASO_COBRANCA_REGUA, 
+                regua.ID_CASO_COBRANCA_REGUA,
                 organizacao.NOME_BANCO_CRM!);
 
             if (reguaConfig == null)
@@ -265,7 +268,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
                         etapa.ID_CASO_COBRANCA_REGUA_ETAPA,
                         organizacao.NOME_BANCO_CRM!);
 
-                    if (listaAcoes.Any())
+                    if (listaAcoes.Count != 0)
                     {
                         await ExecutarAcaoEtapaReguaAsync(organizacao, etapa, regua, reguaConfig, listaAcoes, cancellationToken);
                     }
@@ -393,7 +396,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
 
             dtDados = _filtroService.AplicarFiltros(dtDados, listaFiltros);
             _logger.LogInformation("Após filtros: {Count} destinatários", dtDados.Rows.Count);
-            if (dtDados is not null || dtDados?.Rows.Count == 0)
+            if (dtDados is null || dtDados.Rows.Count == 0)
             {
                 _logger.LogInformation("Nenhum destinatário restante após aplicação de filtros para ação {IdAcao}", 
                     acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
@@ -405,7 +408,26 @@ public class ReguaCobrancaService : IReguaCobrancaService
                 tipoAcao,
                 dtDados.Rows.Count);
 
-            // TODO: Aplicar ordenação se tipo = DISTRIBUIÇÃO
+            // Aplicar ordenação se tipo = DISTRIBUIÇÃO E não é cobrança preventiva
+            if (!(reguaEtapa.FL_COBRANCA_PREVENTIVA ?? false) && 
+                tipoAcao?.Equals("DISTRIBUIÇÃO", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                _logger.LogDebug("Aplicando ordenação para ação tipo DISTRIBUIÇÃO");
+                var listaOrdenacao = await _ordenacaoService.ListarPorEtapaAsync(
+                    reguaEtapa.ID_CASO_COBRANCA_REGUA_ETAPA,
+                    organizacao.NOME_BANCO_CRM!);
+
+                if (listaOrdenacao.Count > 0)
+                {
+                    dtDados = _ordenacaoService.AplicarOrdenacao(dtDados, listaOrdenacao);
+                    _logger.LogInformation("Ordenação aplicada: {Count} ordenações configuradas", listaOrdenacao.Count);
+                }
+                else
+                {
+                    _logger.LogDebug("Nenhuma ordenação configurada para esta etapa");
+                }
+            }
+
             // TODO: Verificar validação da régua (modo teste, limites, etc)
             // TODO: Executar ação final (envio de email/sms/whatsapp)
 
