@@ -3940,12 +3940,13 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.FL_DISCADOR).HasDefaultValue(false);
             entity.Property(e => e.FL_ENVIO_UNICO_CONTA).HasDefaultValue(false);
             entity.Property(e => e.ID_CATEGORIA_ATENDIMENTO).HasDefaultValue(0);
-            entity.Property(e => e.ID_TEMPLATE_MRS)
-                .HasMaxLength(5)
-                .IsUnicode(false);
-            entity.Property(e => e.ID_TIPO_POSTAGEM)
-                .HasMaxLength(5)
-                .IsUnicode(false);
+            
+            // Colunas que existem apenas em algumas bases (em desenvolvimento)
+            // Descomentar quando todas as bases tiverem essas colunas:
+            // entity.Property(e => e.ID_TEMPLATE_MRS).HasMaxLength(5).IsUnicode(false);
+            // entity.Property(e => e.ID_TIPO_POSTAGEM).HasMaxLength(5).IsUnicode(false);
+            entity.Ignore(e => e.ID_TEMPLATE_MRS);
+            entity.Ignore(e => e.ID_TIPO_POSTAGEM);
 
             entity.HasOne(d => d.ID_EQUIPE_HELPDESKNavigation).WithMany(p => p.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs)
                 .HasForeignKey(d => d.ID_EQUIPE_HELPDESK)
@@ -3954,6 +3955,11 @@ public partial class ClienteMaisDbContext : DbContext
             entity.HasOne(d => d.ID_FORMULARIONavigation).WithMany(p => p.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs)
                 .HasForeignKey(d => d.ID_FORMULARIO)
                 .HasConstraintName("FK_TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_TB_CMCRM_FORMULARIO");
+
+            entity.HasOne(d => d.TIPO_ACAO).WithMany()
+                .HasForeignKey(d => d.ID_TIPO_ACAO)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_TIPO_ACAO");
         });
 
         modelBuilder.Entity<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_AGENDA>(entity =>
@@ -3982,6 +3988,11 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.DS_VALOR)
                 .HasMaxLength(500)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO_TIPO_FILTRONavigation).WithMany()
+                .HasForeignKey(d => d.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO_TIPO_FILTRO)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_FILTRO_TIPO_FILTRO");
         });
 
         modelBuilder.Entity<TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAO_FILTRO_LOG>(entity =>
@@ -4140,6 +4151,7 @@ public partial class ClienteMaisDbContext : DbContext
             entity.Property(e => e.DS_TIPO_ACAO)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.FL_ACAO_AGENDADA).HasDefaultValue(false);
         });
 
         modelBuilder.Entity<TB_CMCRM_CASO_COBRANCA_REGUA__ACAO_MR>(entity =>

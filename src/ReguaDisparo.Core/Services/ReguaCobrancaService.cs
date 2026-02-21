@@ -91,13 +91,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
 
             var organizacoesFiltradas = listaOrganizacao
                 .Where(o => !string.IsNullOrEmpty(o.NOME_BANCO_CRM))
-                .Where(o => o.ID_ORGANIZACAO != "PLANET_SMART_CITIES" 
-                         && o.ID_ORGANIZACAO != "TERIVA_URBANISMO"
-                         && o.ID_ORGANIZACAO != "EMCCAMP"
-                         && o.ID_ORGANIZACAO != "HABITAT"
-                         && o.ID_ORGANIZACAO != "RESECOM_CONSTRUTORA_LTDA"
-                         && o.ID_ORGANIZACAO != "RESECOM_TRINUS"
-                         && o.ID_ORGANIZACAO != "COLORADO_MEGA")
+                .Where(o => o.DS_NOME_FANTASIA.Contains("CASA E TERRA"))
                 .OrderByDescending(o => o.NOME_BANCO_CRM)
                 .ToList();
 
@@ -199,7 +193,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
                 }
             }
 
-            using var crmDb = await _tenantFactory.CreateDbContextAsync(organizacao.ID_ORGANIZACAO!);
+            using var crmDb = await _tenantFactory.CreateDbContextAsync(organizacao.NOME_BANCO_CRM!);
             
             var reguaRepo = new ReguaCobrancaRepository(crmDb, _loggerFactory.CreateLogger<ReguaCobrancaRepository>());
             var listaReguas = await reguaRepo.ListarReguasAtivasAsync();
@@ -246,6 +240,32 @@ public class ReguaCobrancaService : IReguaCobrancaService
             if (reguaConfig == null)
             {
                 _logger.LogWarning("Configuração não encontrada para régua {IdRegua}", regua.ID_CASO_COBRANCA_REGUA);
+                return;
+            }
+
+            // Validar horário de execução da régua
+            if (string.IsNullOrEmpty(reguaConfig.NR_HORA_INICIAL) || string.IsNullOrEmpty(reguaConfig.NR_HORA_FINAL))
+            {
+                _logger.LogWarning("Régua {NomeRegua} não processada - horários inicial ou final não configurados",
+                    regua.DS_NOME_REGUA);
+                return;
+            }
+
+            var horaAtual = TimeOnly.FromDateTime(DateTime.Now);
+            
+            if (!TimeOnly.TryParse(reguaConfig.NR_HORA_INICIAL, out var horaInicial) || 
+                !TimeOnly.TryParse(reguaConfig.NR_HORA_FINAL, out var horaFinal))
+            {
+                _logger.LogWarning("Régua {NomeRegua} não processada - formato de horário inválido. Inicial: {HoraInicial}, Final: {HoraFinal}",
+                    regua.DS_NOME_REGUA, reguaConfig.NR_HORA_INICIAL, reguaConfig.NR_HORA_FINAL);
+                return;
+            }
+
+            if (horaAtual < horaInicial || horaAtual > horaFinal)
+            {
+                _logger.LogInformation(
+                    "Régua {NomeRegua} não processada - horário fora do período permitido. Horário atual: {HoraAtual}, Permitido: {HoraInicial} - {HoraFinal}",
+                    regua.DS_NOME_REGUA, horaAtual.ToString("HH:mm"), reguaConfig.NR_HORA_INICIAL, reguaConfig.NR_HORA_FINAL);
                 return;
             }
 
@@ -317,7 +337,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
                     int qtdeEnvioNoDia = 0;
                     bool existeAgendamento = true;
                     
-                    if (acao.FL_ACAO_AGENDADA)
+                    if (acao.TIPO_ACAO!.FL_ACAO_AGENDADA)
                     {
                         existeAgendamento = false;
                         var agendamentos = await _agendamentoService.ObterAgendamentosPendentesAsync(
@@ -379,8 +399,8 @@ public class ReguaCobrancaService : IReguaCobrancaService
                 organizacao.NOME_BANCO_CRM!);
 
             // Obter tipo de ação da navigation property (Include feito no repository)
-            string tipoAcao = acao.ID_TIPO_ACAONavigation?.DS_TIPO_ACAO!;
-
+            string tipoAcao = acao.TIPO_ACAO?.DS_TIPO_ACAO!;
+                
             // Buscar base de dados para mensageria conforme tipo de ação
             // Retorna DataTable para compatibilidade com lógica original
             var dtDados = await _mensageriaService.BuscarBaseMensageriaAsync(

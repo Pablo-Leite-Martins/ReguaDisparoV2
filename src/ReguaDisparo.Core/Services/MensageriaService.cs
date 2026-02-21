@@ -44,7 +44,7 @@ public class MensageriaService : IMensageriaService
     {
         try
         {
-            var dsTipoAcao = acao.ID_TIPO_ACAONavigation?.DS_TIPO_ACAO ?? "";
+            var dsTipoAcao = acao.TIPO_ACAO?.DS_TIPO_ACAO ?? "";
             
             _logger.LogInformation("Buscando base mensageria - Tipo: {Tipo}, Descrição: {Descricao}, Preventiva: {Preventiva}", 
                 dsTipoAcao, acao.DS_NOME_ACAO, cobrancaPreventiva);
@@ -69,7 +69,6 @@ public class MensageriaService : IMensageriaService
             }
             else
             {
-                // Mensageria de cobrança (principal) - implementa cache como no projeto antigo
                 return await BuscarBaseCobrancaAsync(proceduresRepo, cobrancaPreventiva);
             }
         }

@@ -185,7 +185,7 @@ public class ReguaCobrancaEtapaAcaoFiltroService : IReguaCobrancaEtapaAcaoFiltro
             "TIPO PARCELA" => "ID_TIPO_PARCELA",
             "OBRA" => "ID_OBRA",
             "CLASSIFICAÇÃO CONTRATO" => "DS_CLASSIFICACAO_CONTRATO",
-            "STATUS COBRANÇA" => "ST_COBRANCA ",
+            "STATUS COBRANÇA" => "ST_COBRANCA",
             "STATUS ESCRITURA" => "ST_ESCRITURA",
             "INDICE REAJUSTE" => "DS_INDICE_REAJUSTE",
             "AGING DIAS" => "NR_AGING_DIAS_CONTRATO",

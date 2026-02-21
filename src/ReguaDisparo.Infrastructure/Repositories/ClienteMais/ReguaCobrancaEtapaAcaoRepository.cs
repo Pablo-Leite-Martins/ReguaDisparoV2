@@ -46,7 +46,7 @@ public class ReguaCobrancaEtapaAcaoRepository : IReguaCobrancaEtapaAcaoRepositor
             _logger.LogDebug("Listando a��es por etapa {IdReguaEtapa}", idReguaEtapa);
 
             var lista = await _context.TB_CMCRM_CASO_COBRANCA_REGUA_ETAPA_ACAOs
-                .Include(a => a.ID_TIPO_ACAONavigation)
+                .Include(a => a.TIPO_ACAO)
                 .Where(a => a.ID_CASO_COBRANCA_REGUA_ETAPA == idReguaEtapa)
                 .AsNoTracking()
                 .ToListAsync();
