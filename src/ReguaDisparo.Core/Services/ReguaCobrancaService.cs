@@ -92,7 +92,7 @@ public class ReguaCobrancaService : IReguaCobrancaService
             var organizacoesFiltradas = listaOrganizacao
                 .Where(o => !string.IsNullOrEmpty(o.NOME_BANCO_CRM))
                 .Where(o => o.DS_NOME_FANTASIA.Contains("CASA E TERRA"))
-                .OrderByDescending(o => o.NOME_BANCO_CRM)
+                .OrderBy(o => o.DS_NOME_FANTASIA)
                 .ToList();
 
             foreach (var organizacao in organizacoesFiltradas)
@@ -448,10 +448,19 @@ public class ReguaCobrancaService : IReguaCobrancaService
                 }
             }
 
-            // TODO: Verificar validação da régua (modo teste, limites, etc)
+            // Verificar validação da régua (modo teste/homologação)
+            VerificarReguaValidacao(ref dtDados, regua, reguaConfig, tipoAcao ?? string.Empty);
+
+            if (dtDados == null || dtDados.Rows.Count == 0)
+            {
+                _logger.LogInformation("Nenhum destinatário após verificação de validação para ação {IdAcao}", 
+                    acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO);
+                return;
+            }
+
             // TODO: Executar ação final (envio de email/sms/whatsapp)
 
-            _logger.LogInformation("Ação {IdAcao} processada: {Count} destinatários encontrados", 
+            _logger.LogInformation("Ação {IdAcao} processada: {Count} destinatários válidos", 
                 acao.ID_CASO_COBRANCA_REGUA_ETAPA_ACAO, dtDados.Rows.Count);
         }
         catch (Exception ex)
@@ -460,4 +469,65 @@ public class ReguaCobrancaService : IReguaCobrancaService
             throw;
         }
     }
-}
+
+    /// <summary>
+    /// Verifica a validação da régua - se não estiver validada (modo teste/homologação),
+    /// substitui as colunas de email e telefone pelos valores de teste
+    /// </summary>
+    private void VerificarReguaValidacao(
+        ref DataTable dtDados,
+        TB_CMCRM_CASO_COBRANCA_REGUA regua,
+        TB_CMCRM_CASO_COBRANCA_REGUA_CONFIG reguaConfig,
+        string tipoAcao)
+    {
+        if (dtDados == null || dtDados.Rows.Count == 0)
+            return;
+
+        // Homologar a Régua antes de Enviar
+        // Se não estiver validada, redireciona para email/telefone de teste
+        if (!(regua.FL_VALIDADO ?? false))
+        {
+            _logger.LogWarning("Régua NÃO VALIDADA - Modo teste/homologação ativo. Redirecionando para contatos de teste.");
+
+            // Substituir coluna de email
+            if (dtDados.Columns.Contains("DS_EMAIL"))
+                dtDados.Columns.Remove("DS_EMAIL");
+            
+            DataColumn colEmail = new DataColumn("DS_EMAIL", typeof(string))
+            {
+                DefaultValue = reguaConfig.DS_EMAIL_RECEPTIVO_TESTE ?? string.Empty
+            };
+            dtDados.Columns.Add(colEmail);
+
+            // Para tipos diferentes de "ARQUIVO TELEFONIA", substituir também telefone
+            if (!tipoAcao.Equals("ARQUIVO TELEFONIA", StringComparison.OrdinalIgnoreCase))
+            {
+                // Substituir coluna de telefone
+                if (dtDados.Columns.Contains("NR_TELEFONE"))
+                    dtDados.Columns.Remove("NR_TELEFONE");
+                
+                DataColumn colTelefone = new DataColumn("NR_TELEFONE", typeof(string))
+                {
+                    DefaultValue = reguaConfig.NR_TELEFONE_RECEPTIVO_TESTE ?? string.Empty
+                };
+                dtDados.Columns.Add(colTelefone);
+
+                // Substituir coluna de DDD
+                if (dtDados.Columns.Contains("COD_DDD"))
+                    dtDados.Columns.Remove("COD_DDD");
+                
+                DataColumn colDDD = new DataColumn("COD_DDD", typeof(string))
+                {
+                    DefaultValue = string.Empty
+                };
+                dtDados.Columns.Add(colDDD);
+            }
+
+            _logger.LogInformation("Dados redirecionados para email de teste: {EmailTeste}", 
+                reguaConfig.DS_EMAIL_RECEPTIVO_TESTE);
+        }
+        else
+        {
+            _logger.LogDebug("Régua validada - Disparos serão enviados para destinatários reais");
+        }
+    }}

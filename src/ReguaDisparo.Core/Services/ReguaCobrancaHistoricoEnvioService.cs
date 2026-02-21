@@ -160,4 +160,42 @@ public class ReguaCobrancaHistoricoEnvioService : IReguaCobrancaHistoricoEnvioSe
             throw;
         }
     }
+
+    public async Task<bool> VerificarEnvioNoDiaAsync(string idChaveErp, int idAcao, string nomeBancoCrm)
+    {
+        try
+        {
+            using var crmDb = await _tenantFactory.CreateDbContextAsync(nomeBancoCrm);
+            var repository = new ReguaCobrancaHistoricoEnvioRepository(
+                crmDb,
+                _loggerFactory.CreateLogger<ReguaCobrancaHistoricoEnvioRepository>());
+
+            var lista = await repository.VerificaDadoEnviadoDiaAsync(idChaveErp, idAcao);
+            return lista.Count > 0;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao verificar envio no dia para chave ERP {IdChaveErp}", idChaveErp);
+            return false; // Em caso de erro, assume que não foi enviado (fail-safe)
+        }
+    }
+
+    public async Task<bool> VerificarEnvioNoDiaPorContaAsync(int idConta, int idAcao, string nomeBancoCrm)
+    {
+        try
+        {
+            using var crmDb = await _tenantFactory.CreateDbContextAsync(nomeBancoCrm);
+            var repository = new ReguaCobrancaHistoricoEnvioRepository(
+                crmDb,
+                _loggerFactory.CreateLogger<ReguaCobrancaHistoricoEnvioRepository>());
+
+            var lista = await repository.VerificaDadoEnviadoDiaPorContaAsync(idConta, idAcao);
+            return lista.Count > 0;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao verificar envio no dia para conta {IdConta}", idConta);
+            return false; // Em caso de erro, assume que não foi enviado (fail-safe)
+        }
+    }
 }
