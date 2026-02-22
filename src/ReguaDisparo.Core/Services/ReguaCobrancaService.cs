@@ -530,4 +530,5 @@ public class ReguaCobrancaService : IReguaCobrancaService
         {
             _logger.LogDebug("Régua validada - Disparos serão enviados para destinatários reais");
         }
-    }}
+    }
+}
